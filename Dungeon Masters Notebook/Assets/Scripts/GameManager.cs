@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
 
     public void SelectPage(int id)
     {
-        linksPanel.AddLink(id);
+        linksPanel.SelectId(id);
     }
 
     public void Load(string title)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,10 @@ public class LinksPanel : MonoBehaviour
     public GameObject linksPrefab;
 
     List<PagePanelItem> items;
+
+    public GameObject windowBlocker,acceptPanel;
+
+    int currentId;
 
     private void Awake()
     {
@@ -72,5 +77,39 @@ public class LinksPanel : MonoBehaviour
         }
 
         GameManager.isSelectingLink = false;
+    }
+
+    public void CreateOneWayLink()
+    {
+        if (!GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Contains(currentId))
+        {
+            GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Add(currentId);
+            CreateLink(currentId);
+        }
+
+        GameManager.isSelectingLink = false;
+    }
+
+    public void CreateTwoWayLink()
+    {
+        if(!GameManager.CurrentCampaign.GetPageById(currentId).links.Contains(GameManager.Instance.mainPanel.currentPageId))
+        {
+            GameManager.CurrentCampaign.GetPageById(currentId).links.Add(GameManager.Instance.mainPanel.currentPageId);
+        }
+
+        if (!GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Contains(currentId))
+        {
+            GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Add(currentId);
+            CreateLink(currentId);
+        }
+
+        GameManager.isSelectingLink = false;
+    }
+
+    internal void SelectId(int id)
+    {
+        currentId = id;
+        windowBlocker.SetActive(true);
+        acceptPanel.SetActive(true);
     }
 }
