@@ -41,7 +41,7 @@ public class MainPanelBehaviour : MonoBehaviour
             else if (GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths.Count > 0)
             {
                 mainImage.path = GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths[0];
-                mainImage.LoadImage();
+                mainImage.LoadImageChecked();
             }
             else
             {

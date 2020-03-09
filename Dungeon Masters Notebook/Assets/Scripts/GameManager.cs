@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 
 public class GameManager : MonoBehaviour
 {
@@ -81,6 +82,37 @@ public class GameManager : MonoBehaviour
         tagsPanel.LoadTags();
         mainPanel.OpenPage(0);
         tagsPanel.pagetags.UpdateTags();
+    }
+
+    public void StartLoadingImageURL(Page page, int textureId)
+    {
+        StartCoroutine(LoadTexture(page, textureId));
+    }
+
+    public IEnumerator LoadTexture(Page page, int textureId)
+    {
+        UnityWebRequest www = UnityWebRequestTexture.GetTexture(page.imagePaths[textureId]);
+        UnityWebRequestAsyncOperation imageRequest = www.SendWebRequest();
+
+        int timeOutCounter = 0;
+
+        while (!imageRequest.isDone && timeOutCounter < 10)
+        {
+            timeOutCounter++;
+            yield return new WaitForSeconds(2);
+        }
+
+        if (!imageRequest.isDone || www.isNetworkError || www.isHttpError)
+        {
+            page.textures[textureId] = null;
+        }
+        else
+        {
+            //return valid results:
+            Texture2D result = DownloadHandlerTexture.GetContent(www);
+            page.textures[textureId] = Sprite.Create(result, new Rect(0, 0, result.width, result.height), Vector2.one * 0.5f);
+        }
+        page.onPageChanged.Invoke();
     }
 
     public void _CreateNewCampaign(string name)

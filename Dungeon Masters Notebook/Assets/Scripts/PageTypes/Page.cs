@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 
 public class Page
 {
@@ -80,8 +81,17 @@ public class Page
             {
                 try
                 {
-                    WWW www = new WWW("file:///" + imagePaths[i]);
-                    textures.Add(Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), Vector2.one * 0.5f));
+                    if(imagePaths[i].StartsWith("file:///"))
+                    {
+                        WWW www = new WWW(imagePaths[i]);
+                        textures.Add(Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), Vector2.one * 0.5f));
+                    }
+                    else
+                    {
+                        textures.Add(null);
+                        int currentImage = i;
+                        GameManager.Instance.StartLoadingImageURL(this, currentImage);
+                    }
                 }
                 catch
                 {
