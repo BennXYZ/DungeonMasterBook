@@ -49,6 +49,10 @@ public class Page
                 numberOfTexts = 1;
                 numberOfImages = 1;
                 break;
+            case PageTypes.Character:
+                numberOfTexts = 6;
+                numberOfImages = 1;
+                break;
         }
         for (int i = 0; i < numberOfTexts; i++)
         {

@@ -15,6 +15,7 @@ public class MainPanelBehaviour : MonoBehaviour
     [Space(20)]
 
     public BlankPageBehaviour blankPage;
+    public CharacterPageBehaviour characterpage;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class MainPanelBehaviour : MonoBehaviour
     {
         header.gameObject.SetActive(false);
         blankPage.gameObject.SetActive(false);
+        characterpage.gameObject.SetActive(false);
     }
 
     public void UpdateItems()
@@ -101,7 +103,15 @@ public class MainPanelBehaviour : MonoBehaviour
             {
                 case PageTypes.Blank:
                     blankPage.gameObject.SetActive(true);
+                    characterpage.gameObject.SetActive(false);
+
                     blankPage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts[0]);
+                    break;
+                case PageTypes.Character:
+                    blankPage.gameObject.SetActive(false);
+                    characterpage.gameObject.SetActive(true);
+
+                    characterpage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
                     break;
             }
             if(GameManager.CurrentCampaign.GetPageById(id).imagePaths.Count > 0)
