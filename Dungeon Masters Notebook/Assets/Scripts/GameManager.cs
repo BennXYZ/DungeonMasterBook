@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,18 +10,12 @@ public class GameManager : MonoBehaviour
 {
     public Campaign currentCampaign;
 
-    public static void CreateNewCampaign(string name)
-    {
-        instance.currentCampaign = new Campaign();
-        instance.currentCampaign.name = name;
-        instance.AddPage(0);
-        SaveSystem.SaveCampaign(CurrentCampaign);
-    }
-
     public UnityEvent onTagsChanged;
     private static GameManager instance;
 
     public static bool isSelectingLink = false;
+
+    public TMP_Text campaignTitle;
 
     public PagesPanel pagesPanel;
 
@@ -81,10 +76,28 @@ public class GameManager : MonoBehaviour
     public void Load(string title)
     {
         currentCampaign = new Campaign(SaveSystem.LoadCampaign(title));
+        campaignTitle.text = title;
         pagesPanel.LoadPages();
         tagsPanel.LoadTags();
         mainPanel.OpenPage(0);
         tagsPanel.pagetags.UpdateTags();
+    }
+
+    public void _CreateNewCampaign(string name)
+    {
+        currentCampaign = new Campaign();
+        currentCampaign.name = name;
+        pagesPanel.LoadPages();
+        tagsPanel.LoadTags();
+        AddPage(0);
+        SaveSystem.SaveCampaign(CurrentCampaign);
+        campaignTitle.text = name;
+        tagsPanel.pagetags.UpdateTags();
+    }
+
+    public static void CreateNewCampaign(string name)
+    {
+        instance._CreateNewCampaign(name);
     }
 
     public void OpenPage(int id)
