@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
             page.textures[textureId] = Sprite.Create(result, new Rect(0, 0, result.width, result.height), Vector2.one * 0.5f);
         }
         page.onPageChanged.Invoke();
+        mainPanel.UpdateItems();
     }
 
     public void _CreateNewCampaign(string name)
