@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
 
     public UnityEvent onTagsChanged;
     private static GameManager instance;
+    public bool favoriteFilter;
 
     public static bool isSelectingLink = false;
 
@@ -31,7 +32,21 @@ public class GameManager : MonoBehaviour
     Dictionary<int, PageTypes> typesByInt = new Dictionary<int, PageTypes>
     {
         {0, PageTypes.Blank },
-        {1, PageTypes.Character }
+        {1, PageTypes.Character },
+        {2, PageTypes.Item },
+        {3, PageTypes.Location },
+        {4, PageTypes.Quest },
+        {5, PageTypes.Group}
+    };
+
+    public Dictionary<PageTypes, bool> pageFilters = new Dictionary<PageTypes, bool>
+    {
+        {PageTypes.Blank, false },
+        {PageTypes.Item, false },
+        {PageTypes.Character, false },
+        {PageTypes.Location, false },
+        {PageTypes.Quest, false },
+        {PageTypes.Group, false },
     };
 
     public static GameManager Instance { get => instance; }
@@ -51,6 +66,42 @@ public class GameManager : MonoBehaviour
         campaignSelection.gameObject.SetActive(true);
         mainPanel.pagetagSelection.Initialize();
         //currentCampaign = new Campaign();
+    }
+
+    public void SetFavoriteFilter(bool val)
+    {
+        favoriteFilter = val;
+        pagesPanel.FilterPages();
+    }
+    public void SetBlankFilter(bool val)
+    {
+        SetPageFilter(PageTypes.Blank, val);
+    }
+    public void SetCharacterFilter(bool val)
+    {
+        SetPageFilter(PageTypes.Character, val);
+    }
+    public void SetItemFilter(bool val)
+    {
+        SetPageFilter(PageTypes.Item, val);
+    }
+    public void SetLocationFilter(bool val)
+    {
+        SetPageFilter(PageTypes.Location, val);
+    }
+    public void SetQuestFilter(bool val)
+    {
+        SetPageFilter(PageTypes.Quest, val);
+    }
+    public void SetGroupFilter(bool val)
+    {
+        SetPageFilter(PageTypes.Group, val);
+    }
+
+    public void SetPageFilter(PageTypes pageType, bool val)
+    {
+        pageFilters[pageType] = val;
+        pagesPanel.FilterPages();
     }
 
     public void AddPage(int type)

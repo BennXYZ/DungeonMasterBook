@@ -12,6 +12,7 @@ public class PagePanelItem : MonoBehaviour
     public Image image;
     public TMP_Text name;
     public TMP_Text tags;
+    public Image favorite;
     public Button button;
 
     public bool isLink = false;
@@ -35,6 +36,10 @@ public class PagePanelItem : MonoBehaviour
         {
             WWW www = new WWW("file:///" + page.imagePaths[0]);
             image.sprite = image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), Vector2.one * 0.5f);
+        }
+        if(favorite)
+        {
+            favorite.gameObject.SetActive(page.favorite);
         }
         name.text = page.name;
         UpdateTagText();

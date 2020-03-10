@@ -15,6 +15,7 @@ public class Page
     public List<string> texts;
     public List<int> links;
     public PageTypes pageType;
+    public bool favorite;
 
     public UnityEvent onPageChanged;
     public UnityEvent onPageDeleted;
@@ -54,6 +55,22 @@ public class Page
                 numberOfTexts = 6;
                 numberOfImages = 1;
                 break;
+            case PageTypes.Item:
+                numberOfTexts = 5;
+                numberOfImages = 1;
+                break;
+            case PageTypes.Location:
+                numberOfTexts = 6;
+                numberOfImages = 1;
+                break;
+            case PageTypes.Quest:
+                numberOfTexts = 5;
+                numberOfImages = 1;
+                break;
+            case PageTypes.Group:
+                numberOfTexts = 5;
+                numberOfImages = 1;
+                break;
         }
         for (int i = 0; i < numberOfTexts; i++)
         {
@@ -71,6 +88,7 @@ public class Page
         onPageChanged = new UnityEvent();
         id = data.id;
         name = data.name;
+        favorite = data.favorite;
         pageType = (PageTypes)Enum.Parse(typeof(PageTypes), data.pageType);
         tags = data.tags.ToList();
         imagePaths = data.imagePaths.ToList();
@@ -117,12 +135,14 @@ public class PageData
     public string[] imagePaths;
     public string[] texts;
     public int[] links;
+    public bool favorite;
 
     public PageData(Page data)
     {
         tags = data.tags.ToArray();
         pageType = data.pageType.ToString();
         name = data.name;
+        favorite = data.favorite;
         id = data.id;
         imagePaths = data.imagePaths.ToArray();
         texts = data.texts.ToArray();

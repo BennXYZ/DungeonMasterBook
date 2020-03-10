@@ -47,6 +47,18 @@ public class PagesPanel : MonoBehaviour
                     break;
                 }
             }
+            foreach(KeyValuePair<PageTypes, bool> pair in GameManager.Instance.pageFilters)
+            {
+                if(pair.Value && pair.Key != items[i].page.pageType)
+                {
+                    badTagMatch = true;
+                    break;
+                }
+            }
+            if(GameManager.Instance.favoriteFilter && !items[i].page.favorite)
+            {
+                badTagMatch = true;
+            }
             items[i].gameObject.SetActive(!badTagMatch);
         }
     }

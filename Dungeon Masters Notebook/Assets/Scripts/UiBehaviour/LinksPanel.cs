@@ -9,6 +9,8 @@ public class LinksPanel : MonoBehaviour
 
     public GameObject linksPrefab;
 
+    public GameObject linksNotification;
+
     List<PagePanelItem> items;
 
     public GameObject windowBlocker,acceptPanel;
@@ -47,6 +49,7 @@ public class LinksPanel : MonoBehaviour
     public void SelectLink()
     {
         GameManager.isSelectingLink = !GameManager.isSelectingLink;
+        linksNotification.gameObject.SetActive(GameManager.isSelectingLink);
     }
 
     public void CreateLink(int id)
@@ -110,6 +113,8 @@ public class LinksPanel : MonoBehaviour
     {
         currentId = id;
         windowBlocker.SetActive(true);
+        GameManager.isSelectingLink = !GameManager.isSelectingLink;
+        linksNotification.gameObject.SetActive(GameManager.isSelectingLink);
         acceptPanel.SetActive(true);
     }
 }

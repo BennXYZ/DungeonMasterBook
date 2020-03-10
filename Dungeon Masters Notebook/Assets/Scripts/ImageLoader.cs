@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -17,6 +17,8 @@ public class ImageLoader : MonoBehaviour
     public UnityEvent onImageChanged;
 
     public TMP_InputField urlInput;
+
+    public FDE_Source fde;
 
     public void ClearImage()
     {
@@ -41,10 +43,23 @@ public class ImageLoader : MonoBehaviour
     {
         if (path == null)
             path = "";
-        string newPath = EditorUtility.OpenFilePanel("Open image file", path, "png,jpg,jpeg");
-        if(path.Length <= 0 || newPath.Length > 0)
+        //string newPath = EditorUtility.OpenFilePanel("Open image file", path, "png,jpg,jpeg");
+        //if(path.Length <= 0 || newPath.Length > 0)
+        //{
+        //    path = "file:///" + newPath;
+        //}
+        //LoadImage();
+        //onImageChanged.Invoke();
+    }
+
+    public void OnExplorerClose()
+    {
+        if (path == null)
+            path = "";
+        //string newPath = fde.MainPath;
+        if (path.Length <= 0 || path.Length > 0)
         {
-            path = "file:///" + newPath;
+            path = "file:///" + path;
         }
         LoadImage();
         onImageChanged.Invoke();
@@ -55,7 +70,9 @@ public class ImageLoader : MonoBehaviour
         if(urlInput.text.Length > 0)
         {
             path = urlInput.text;
+            FDE_Source lel;
             StartCoroutine("WaitForImage");
+            urlInput.text = "";
         }
     }
 

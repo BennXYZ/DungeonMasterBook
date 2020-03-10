@@ -4,5 +4,9 @@ using System.IO;
 public enum PageTypes
 {
     Blank,
-    Character
+    Character,
+    Item,
+    Location,
+    Quest,
+    Group
 }
