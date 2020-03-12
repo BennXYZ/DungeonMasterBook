@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1780237182}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedType
         m_Mode: 0
         m_Arguments:
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 547937966}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedQuestGiver
         m_Mode: 0
         m_Arguments:
@@ -1218,7 +1218,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000030517578, y: 0}
+  m_AnchoredPosition: {x: -0.000022679567, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &57551758
@@ -1501,7 +1501,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1344706699}
+      - m_Target: {fileID: 0}
         m_MethodName: BackstoryChanged
         m_Mode: 0
         m_Arguments:
@@ -1842,7 +1842,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1344706699}
+      - m_Target: {fileID: 0}
         m_MethodName: InformationChanged
         m_Mode: 0
         m_Arguments:
@@ -4009,7 +4009,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1344706699}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedGoals
         m_Mode: 0
         m_Arguments:
@@ -6209,7 +6209,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6427,7 +6427,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &348920961
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6462,15 +6462,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 348920960}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10ade2397f5c96e4d9064a0da1e71b43, type: 3}
+  m_Script: {fileID: 11500000, guid: b7b725de52dd9d14990519f0fcd8722d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  personality: {fileID: 1080395746}
-  appearance: {fileID: 1398211544}
-  skills: {fileID: 1739531213}
-  information: {fileID: 995376957}
-  backstoy: {fileID: 1354880225}
-  log: {fileID: 1099884272}
+  inputFields:
+  - {fileID: 1080395746}
+  - {fileID: 1398211544}
+  - {fileID: 1739531213}
+  - {fileID: 995376957}
+  - {fileID: 1354880225}
+  - {fileID: 1099884272}
 --- !u!1 &350706136
 GameObject:
   m_ObjectHideFlags: 0
@@ -9565,13 +9566,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 606155235}
         m_MethodName: AddPage
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 3
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Location
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 218290558}
@@ -10319,13 +10320,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 606155235}
         m_MethodName: AddPage
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 2
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Item
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 218290558}
@@ -10515,7 +10516,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1509947573}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedAppearance
         m_Mode: 0
         m_Arguments:
@@ -10668,14 +10669,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 547937964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8602e97a4ac88846a098b18c8f7e2ee, type: 3}
+  m_Script: {fileID: 11500000, guid: b7b725de52dd9d14990519f0fcd8722d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  giver: {fileID: 11754352}
-  rewards: {fileID: 963643947}
-  information: {fileID: 1648371166}
-  backstory: {fileID: 1269953750}
-  log: {fileID: 1177784244}
+  inputFields:
+  - {fileID: 963643947}
+  - {fileID: 963643947}
+  - {fileID: 1648371166}
+  - {fileID: 1269953750}
+  - {fileID: 1177784244}
 --- !u!1 &554079008
 GameObject:
   m_ObjectHideFlags: 0
@@ -10755,7 +10757,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1780237182}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedAppearance
         m_Mode: 0
         m_Arguments:
@@ -11308,7 +11310,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1797939366}
+      - m_Target: {fileID: 0}
         m_MethodName: TextChanged
         m_Mode: 0
         m_Arguments:
@@ -12383,6 +12385,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 051bf753087d03f4887485863820db65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingsList:
+    settings:
+    - {fileID: 11400000, guid: af5d98e15b222814c812790a05c0bcdd, type: 2}
+    - {fileID: 11400000, guid: 9518f3d47fac62a4290780d8a5907938, type: 2}
+    - {fileID: 11400000, guid: b94b3bab0757f2b40a7918ff9b26fd37, type: 2}
+    - {fileID: 11400000, guid: c76a95c53563eb9439b181f9dde8e685, type: 2}
+    - {fileID: 11400000, guid: ef7c333c6ebcceb4f8c248eefc285dbf, type: 2}
+    - {fileID: 11400000, guid: 30d7ea4ea1e5df44c8c037447c9ddef7, type: 2}
   onTagsChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -12650,7 +12660,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -14237,7 +14247,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1862807655}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.29004788
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -15535,7 +15545,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00086343347}
+  m_AnchoredPosition: {x: 0, y: 0.0006999489}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &801391130
@@ -16867,13 +16877,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 606155235}
         m_MethodName: AddPage
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 5
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Group
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 218290558}
@@ -18752,7 +18762,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 547937966}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedRewards
         m_Mode: 0
         m_Arguments:
@@ -19236,7 +19246,7 @@ GameObject:
   - component: {fileID: 995376958}
   - component: {fileID: 995376957}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField INFO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -19322,7 +19332,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348920962}
+      - m_Target: {fileID: 0}
         m_MethodName: InformationTextChanged
         m_Mode: 0
         m_Arguments:
@@ -20774,7 +20784,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1780237182}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedLog
         m_Mode: 0
         m_Arguments:
@@ -21122,7 +21132,7 @@ GameObject:
   - component: {fileID: 1080395747}
   - component: {fileID: 1080395746}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField PERS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21208,7 +21218,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348920962}
+      - m_Target: {fileID: 0}
         m_MethodName: PersonalityTextChanged
         m_Mode: 0
         m_Arguments:
@@ -21719,7 +21729,7 @@ GameObject:
   - component: {fileID: 1099884273}
   - component: {fileID: 1099884272}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField LOG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21805,7 +21815,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348920962}
+      - m_Target: {fileID: 0}
         m_MethodName: LogTextChanged
         m_Mode: 0
         m_Arguments:
@@ -21972,13 +21982,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 606155235}
         m_MethodName: AddPage
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 4
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Quest
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 218290558}
@@ -22783,7 +22793,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 547937966}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedLog
         m_Mode: 0
         m_Arguments:
@@ -23857,7 +23867,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 398261862}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.29298455
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25487,7 +25497,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 547937966}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedBackstory
         m_Mode: 0
         m_Arguments:
@@ -26414,6 +26424,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 224198335559089460, guid: 05cb27370bb76b445903384c17fe092a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000114090006
+      objectReference: {fileID: 0}
     - target: {fileID: 224230755178379598, guid: 05cb27370bb76b445903384c17fe092a,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -26512,12 +26527,12 @@ PrefabInstance:
     - target: {fileID: 224625055661778002, guid: 05cb27370bb76b445903384c17fe092a,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 65
+      value: -1710
       objectReference: {fileID: 0}
     - target: {fileID: 224625055661778002, guid: 05cb27370bb76b445903384c17fe092a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 10
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 224625055661778002, guid: 05cb27370bb76b445903384c17fe092a,
         type: 3}
@@ -26559,6 +26574,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 224689913561058112, guid: 05cb27370bb76b445903384c17fe092a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 3310316060063851800, guid: 05cb27370bb76b445903384c17fe092a,
         type: 3}
       propertyPath: m_AnchorMin.x
@@ -26658,6 +26678,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8804598970957243223, guid: 05cb27370bb76b445903384c17fe092a,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8804598972712504421, guid: 05cb27370bb76b445903384c17fe092a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000015258789
+      objectReference: {fileID: 0}
+    - target: {fileID: 8804598972712504421, guid: 05cb27370bb76b445903384c17fe092a,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.00005243272
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 05cb27370bb76b445903384c17fe092a, type: 3}
@@ -27172,14 +27207,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1344706697}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dd466dc95141f64094755920445afc8, type: 3}
+  m_Script: {fileID: 11500000, guid: b7b725de52dd9d14990519f0fcd8722d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hierarchy: {fileID: 1945252008}
-  goals: {fileID: 186296507}
-  information: {fileID: 98393653}
-  backstory: {fileID: 85481965}
-  log: {fileID: 1987980375}
+  inputFields:
+  - {fileID: 1945252008}
+  - {fileID: 186296507}
+  - {fileID: 98393653}
+  - {fileID: 85481965}
+  - {fileID: 1987980375}
 --- !u!1 &1354880223
 GameObject:
   m_ObjectHideFlags: 0
@@ -27193,7 +27229,7 @@ GameObject:
   - component: {fileID: 1354880226}
   - component: {fileID: 1354880225}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField BACKST
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27279,7 +27315,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348920962}
+      - m_Target: {fileID: 0}
         m_MethodName: BackstoryTextChanged
         m_Mode: 0
         m_Arguments:
@@ -28475,7 +28511,7 @@ GameObject:
   - component: {fileID: 1398211545}
   - component: {fileID: 1398211544}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField APPEA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28561,7 +28597,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348920962}
+      - m_Target: {fileID: 0}
         m_MethodName: AppearanceTextChanged
         m_Mode: 0
         m_Arguments:
@@ -28713,12 +28749,19 @@ MonoBehaviour:
   pagetagSelection: {fileID: 1506920980}
   favoriteToggle: {fileID: 1716686096}
   header: {fileID: 125434050}
-  blankPage: {fileID: 1797939366}
-  characterpage: {fileID: 348920962}
-  itemPage: {fileID: 1509947573}
-  locationPage: {fileID: 1780237182}
-  questPage: {fileID: 547937966}
-  groupPage: {fileID: 1344706699}
+  pageBehaviours:
+  - pageType: 1
+    page: {fileID: 1797939366}
+  - pageType: 2
+    page: {fileID: 348920962}
+  - pageType: 3
+    page: {fileID: 1509947573}
+  - pageType: 4
+    page: {fileID: 1780237182}
+  - pageType: 5
+    page: {fileID: 547937966}
+  - pageType: 6
+    page: {fileID: 1344706699}
 --- !u!1 &1410182832
 GameObject:
   m_ObjectHideFlags: 0
@@ -29440,13 +29483,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 606155235}
         m_MethodName: AddPage
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 1
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Character
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 218290558}
@@ -29540,7 +29583,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -29864,7 +29907,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1509947573}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedBackstory
         m_Mode: 0
         m_Arguments:
@@ -31161,14 +31204,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1509947571}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df7f637fbcdfbba4eac1fe299b713eab, type: 3}
+  m_Script: {fileID: 11500000, guid: b7b725de52dd9d14990519f0fcd8722d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: {fileID: 1697843458}
-  magic: {fileID: 1826517367}
-  appearance: {fileID: 545273912}
-  effects: {fileID: 1842775188}
-  backstory: {fileID: 1440492454}
+  inputFields:
+  - {fileID: 1697843458}
+  - {fileID: 1826517367}
+  - {fileID: 545273912}
+  - {fileID: 1842775188}
+  - {fileID: 1440492454}
 --- !u!1 &1512626789
 GameObject:
   m_ObjectHideFlags: 0
@@ -31466,7 +31510,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -33785,7 +33829,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1208723140}
   m_HandleRect: {fileID: 1208723139}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -33906,7 +33950,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 547937966}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedInformation
         m_Mode: 0
         m_Arguments:
@@ -34591,7 +34635,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1780237182}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedInformation
         m_Mode: 0
         m_Arguments:
@@ -35101,7 +35145,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1780237182}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedPopulance
         m_Mode: 0
         m_Arguments:
@@ -35283,7 +35327,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1509947573}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedType
         m_Mode: 0
         m_Arguments:
@@ -35469,7 +35513,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 49.65
+  m_fontSize: 58.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -36080,7 +36124,7 @@ GameObject:
   - component: {fileID: 1739531214}
   - component: {fileID: 1739531213}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField SKILLS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36166,7 +36210,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 348920962}
+      - m_Target: {fileID: 0}
         m_MethodName: SkillsTextChanged
         m_Mode: 0
         m_Arguments:
@@ -36870,15 +36914,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1780237180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c5e42e28f3ffe64493ba0cd88fbd5cb, type: 3}
+  m_Script: {fileID: 11500000, guid: b7b725de52dd9d14990519f0fcd8722d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: {fileID: 3626309}
-  populance: {fileID: 1695421364}
-  appearance: {fileID: 554079009}
-  log: {fileID: 1066610294}
-  backstory: {fileID: 1829761512}
-  information: {fileID: 1675502333}
+  inputFields:
+  - {fileID: 3626309}
+  - {fileID: 1695421364}
+  - {fileID: 554079009}
+  - {fileID: 1066610294}
+  - {fileID: 1829761512}
+  - {fileID: 1675502333}
 --- !u!1 &1795410621
 GameObject:
   m_ObjectHideFlags: 0
@@ -36999,10 +37044,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1797939364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 364be98f40092d1458e30a05d8573b51, type: 3}
+  m_Script: {fileID: 11500000, guid: b7b725de52dd9d14990519f0fcd8722d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputField: {fileID: 569149392}
+  inputFields:
+  - {fileID: 569149392}
 --- !u!1 &1806368085
 GameObject:
   m_ObjectHideFlags: 0
@@ -37563,7 +37609,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1509947573}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedMagic
         m_Mode: 0
         m_Arguments:
@@ -38023,7 +38069,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1780237182}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedBackstory
         m_Mode: 0
         m_Arguments:
@@ -38205,7 +38251,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1509947573}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedEffects
         m_Mode: 0
         m_Arguments:
@@ -38532,13 +38578,13 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 606155235}
         m_MethodName: AddPage
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Blank
           m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 218290558}
@@ -40236,7 +40282,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.0000230968, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1930132453
@@ -40394,7 +40440,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1344706699}
+      - m_Target: {fileID: 0}
         m_MethodName: ChangedHierarchy
         m_Mode: 0
         m_Arguments:
@@ -41299,7 +41345,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1344706699}
+      - m_Target: {fileID: 0}
         m_MethodName: LogChanged
         m_Mode: 0
         m_Arguments:
@@ -42638,7 +42684,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00019633718}
+  m_AnchoredPosition: {x: 0, y: 0.000026231137}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2050755114
@@ -42713,7 +42759,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -42977,7 +43023,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

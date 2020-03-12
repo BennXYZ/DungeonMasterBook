@@ -43,40 +43,11 @@ public class Page
 
     private void SetStartList()
     {
-        int numberOfTexts = 0;
-        int numberOfImages = 0;
-        switch (pageType)
-        {
-            case PageTypes.Blank:
-                numberOfTexts = 1;
-                numberOfImages = 1;
-                break;
-            case PageTypes.Character:
-                numberOfTexts = 6;
-                numberOfImages = 1;
-                break;
-            case PageTypes.Item:
-                numberOfTexts = 5;
-                numberOfImages = 1;
-                break;
-            case PageTypes.Location:
-                numberOfTexts = 6;
-                numberOfImages = 1;
-                break;
-            case PageTypes.Quest:
-                numberOfTexts = 5;
-                numberOfImages = 1;
-                break;
-            case PageTypes.Group:
-                numberOfTexts = 5;
-                numberOfImages = 1;
-                break;
-        }
-        for (int i = 0; i < numberOfTexts; i++)
+        for (int i = 0; i < GameManager.Instance.settingsList.GetSettings(pageType).numberOfTexts; i++)
         {
             texts.Add(string.Empty);
         }
-        for (int i = 0; i < numberOfImages; i++)
+        for (int i = 0; i < GameManager.Instance.settingsList.GetSettings(pageType).numberOfImages; i++)
         {
             imagePaths.Add(string.Empty);
             textures.Add(null);

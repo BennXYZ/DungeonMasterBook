@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 {
     public Campaign currentCampaign;
 
+    public PageSettingsList settingsList;
+
     public UnityEvent onTagsChanged;
     private static GameManager instance;
     public bool favoriteFilter;
@@ -104,6 +106,28 @@ public class GameManager : MonoBehaviour
         pagesPanel.FilterPages();
     }
 
+    public void AddPage(string name)
+    {
+        try
+        {
+            PageTypes type = (PageTypes)Enum.Parse(typeof(PageTypes), name);
+            if(type != PageTypes.Default)
+            {
+                currentCampaign.pages.Add(new Page(currentCampaign.FirstAvailableId(), CurrentCampaign.tags.Where(t => t.active).ToList(), type));
+                pagesPanel.CreatePageItem(currentCampaign.pages[currentCampaign.pages.Count - 1]);
+                OpenPage(currentCampaign.pages[currentCampaign.pages.Count - 1].id);
+            }
+            else
+            {
+                Debug.LogError("There was an Error when choosing a Page-Type. Name: " + name);
+            }
+        }
+        catch
+        {
+            Debug.LogError("There was an Error when choosing a Page-Type. Name: " + name);
+        }
+    }
+
     public void AddPage(int type)
     {
         if(type >= 0 && type < typesByInt.Count)
@@ -194,4 +218,19 @@ public class GameManager : MonoBehaviour
         SaveSystem.SaveCampaign(currentCampaign);
     }
 
+    [System.Serializable]
+    public class PageSettingsList
+    {
+        public List<PageSettings> settings;
+        public PageSettings GetSettings(PageTypes type)
+        {
+            for (int i = 0; i < settings.Count; i++)
+            {
+                if (settings[i].type == type)
+                    return settings[i];
+            }
+            Debug.LogError("PageSettings for this Type not found");
+            return null;
+        }
+    }
 }

@@ -16,27 +16,11 @@ public class MainPanelBehaviour : MonoBehaviour
 
     [Space(20)]
 
-    public BlankPageBehaviour blankPage;
-    public CharacterPageBehaviour characterpage;
-    public ItemPageBehaviour itemPage;
-    public LocationPageBehaviour locationPage;
-    public QuestPageBehaviour questPage;
-    public GroupPageBehaviour groupPage;
+    public List<TypePage> pageBehaviours;
 
     private void Awake()
     {
-        CloseCurrentPage();
-    }
-
-    public void CloseCurrentPage()
-    {
-        header.gameObject.SetActive(false);
-        blankPage.gameObject.SetActive(false);
-        characterpage.gameObject.SetActive(false);
-        itemPage.gameObject.SetActive(false);
-        groupPage.gameObject.SetActive(false);
-        locationPage.gameObject.SetActive(false);
-        questPage.gameObject.SetActive(false);
+        ActivateAllPages(false);
     }
 
     public void UpdateItems()
@@ -116,72 +100,45 @@ public class MainPanelBehaviour : MonoBehaviour
         {
             header.gameObject.SetActive(true);
             currentPageId = id;
+            GameManager.Instance.linksPanel.gameObject.SetActive(true);
             UpdateItems();
-            switch(GameManager.CurrentCampaign.GetPageById(id).pageType)
-            {
-                case PageTypes.Blank:
-                    blankPage.gameObject.SetActive(true);
-                    characterpage.gameObject.SetActive(false);
-                    itemPage.gameObject.SetActive(false);
-                    locationPage.gameObject.SetActive(false);
-                    questPage.gameObject.SetActive(false);
-                    groupPage.gameObject.SetActive(false);
-
-                    blankPage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts[0]);
-                    break;
-                case PageTypes.Character:
-                    blankPage.gameObject.SetActive(false);
-                    characterpage.gameObject.SetActive(true);
-                    itemPage.gameObject.SetActive(false);
-                    locationPage.gameObject.SetActive(false);
-                    questPage.gameObject.SetActive(false);
-                    groupPage.gameObject.SetActive(false);
-
-                    characterpage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
-                    break;
-                case PageTypes.Item:
-                    blankPage.gameObject.SetActive(false);
-                    characterpage.gameObject.SetActive(false);
-                    itemPage.gameObject.SetActive(true);
-                    locationPage.gameObject.SetActive(false);
-                    questPage.gameObject.SetActive(false);
-                    groupPage.gameObject.SetActive(false);
-
-                    itemPage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
-                    break;
-                case PageTypes.Location:
-                    blankPage.gameObject.SetActive(false);
-                    characterpage.gameObject.SetActive(false);
-                    itemPage.gameObject.SetActive(false);
-                    locationPage.gameObject.SetActive(true);
-                    questPage.gameObject.SetActive(false);
-                    groupPage.gameObject.SetActive(false);
-
-                    locationPage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
-                    break;
-                case PageTypes.Quest:
-                    blankPage.gameObject.SetActive(false);
-                    characterpage.gameObject.SetActive(false);
-                    itemPage.gameObject.SetActive(false);
-                    locationPage.gameObject.SetActive(false);
-                    questPage.gameObject.SetActive(true);
-                    groupPage.gameObject.SetActive(false);
-
-                    questPage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
-                    break;
-                case PageTypes.Group:
-                    blankPage.gameObject.SetActive(false);
-                    characterpage.gameObject.SetActive(false);
-                    itemPage.gameObject.SetActive(false);
-                    locationPage.gameObject.SetActive(false);
-                    questPage.gameObject.SetActive(false);
-                    groupPage.gameObject.SetActive(true);
-
-                    groupPage.SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
-                    break;
-            }
-            if(GameManager.CurrentCampaign.GetPageById(id).imagePaths.Count > 0)
+            ActivateAllPages(false, GameManager.CurrentCampaign.GetPageById(id).pageType);
+            GetPageByType(GameManager.CurrentCampaign.GetPageById(id).pageType).SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
+            if (GameManager.CurrentCampaign.GetPageById(id).imagePaths.Count > 0)
                 mainImage.path = GameManager.CurrentCampaign.GetPageById(id).imagePaths[0];
         }
+    }
+    
+    public void ActivateAllPages(bool val, PageTypes exception = PageTypes.Default)
+    {
+        if(exception == PageTypes.Default)
+        {
+            header.gameObject.SetActive(val);
+            GameManager.Instance.linksPanel.gameObject.SetActive(val);
+        }
+        for (int i = 0; i < pageBehaviours.Count; i++)
+        {
+            if (pageBehaviours[i].page != null)
+            {
+                pageBehaviours[i].page.gameObject.SetActive(pageBehaviours[i].pageType != exception ? val : !val);
+            }
+        }
+    }
+
+    public PageBehaviour GetPageByType(PageTypes pageType)
+    {
+        for (int i = 0; i < pageBehaviours.Count; i++)
+        {
+            if (pageBehaviours[i].pageType == pageType)
+                return pageBehaviours[i].page;
+        }
+        return null;
+    }
+
+    [System.Serializable]
+    public class TypePage
+    {
+        public PageTypes pageType;
+        public PageBehaviour page;
     }
 }

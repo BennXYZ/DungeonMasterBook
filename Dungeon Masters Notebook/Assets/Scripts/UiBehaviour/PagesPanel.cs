@@ -83,7 +83,7 @@ public class PagesPanel : MonoBehaviour
         }
         if (GameManager.Instance.mainPanel.currentPageId == item.page.id)
         {
-            GameManager.Instance.mainPanel.CloseCurrentPage();
+            GameManager.Instance.mainPanel.ActivateAllPages(false);
             GameManager.Instance.linksPanel.Clear();
         }
         else
