@@ -31,16 +31,6 @@ public class GameManager : MonoBehaviour
 
     public CampaignSelection campaignSelection;
 
-    Dictionary<int, PageTypes> typesByInt = new Dictionary<int, PageTypes>
-    {
-        {0, PageTypes.Blank },
-        {1, PageTypes.Character },
-        {2, PageTypes.Item },
-        {3, PageTypes.Location },
-        {4, PageTypes.Quest },
-        {5, PageTypes.Group}
-    };
-
     public Dictionary<PageTypes, bool> pageFilters = new Dictionary<PageTypes, bool>
     {
         {PageTypes.Blank, false },
@@ -49,6 +39,7 @@ public class GameManager : MonoBehaviour
         {PageTypes.Location, false },
         {PageTypes.Quest, false },
         {PageTypes.Group, false },
+        {PageTypes.Map, false}
     };
 
     public static GameManager Instance { get => instance; }
@@ -75,6 +66,7 @@ public class GameManager : MonoBehaviour
         favoriteFilter = val;
         pagesPanel.FilterPages();
     }
+
     public void SetBlankFilter(bool val)
     {
         SetPageFilter(PageTypes.Blank, val);
@@ -126,17 +118,6 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogError("There was an Error when choosing a Page-Type. Name: " + name);
         }
-    }
-
-    public void AddPage(int type)
-    {
-        if(type >= 0 && type < typesByInt.Count)
-        {
-            currentCampaign.pages.Add(new Page(currentCampaign.FirstAvailableId(), CurrentCampaign.tags.Where(t => t.active).ToList(), typesByInt[type]));
-            pagesPanel.CreatePageItem(currentCampaign.pages[currentCampaign.pages.Count - 1]);
-            OpenPage(currentCampaign.pages[currentCampaign.pages.Count - 1].id);
-        }
-
     }
 
     public static void OpenCampaign(string title)
@@ -197,7 +178,7 @@ public class GameManager : MonoBehaviour
         currentCampaign.name = name;
         pagesPanel.LoadPages();
         tagsPanel.LoadTags();
-        AddPage(0);
+        AddPage("Blank");
         SaveSystem.SaveCampaign(CurrentCampaign);
         campaignTitle.text = name;
         tagsPanel.pagetags.UpdateTags();

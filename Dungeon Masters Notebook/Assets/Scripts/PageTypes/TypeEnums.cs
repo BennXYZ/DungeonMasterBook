@@ -9,5 +9,6 @@ public enum PageTypes
     Item,
     Location,
     Quest,
-    Group
+    Group,
+    Map
 }

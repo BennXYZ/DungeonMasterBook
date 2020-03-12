@@ -35,9 +35,12 @@ public class LinksPanel : MonoBehaviour
     public void SetLinksToCurrentPage()
     {
         Clear();
-        for (int i = 0; i < GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Count; i++)
+        if(GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId) != null)
         {
-            CreateLink(GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links[i]);
+            for (int i = 0; i < GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Count; i++)
+            {
+                CreateLink(GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links[i]);
+            }
         }
     }
 
