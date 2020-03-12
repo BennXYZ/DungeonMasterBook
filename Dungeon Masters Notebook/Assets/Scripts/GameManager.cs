@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
         campaignTitle.text = title;
         pagesPanel.LoadPages();
         tagsPanel.LoadTags();
-        mainPanel.OpenPage(0);
+        mainPanel.OpenPage(currentCampaign.pages[0]);
         tagsPanel.pagetags.UpdateTags();
     }
 

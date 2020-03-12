@@ -54,6 +54,11 @@ public class MainPanelBehaviour : MonoBehaviour
         GameManager.Instance.pagesPanel.FilterPages();
     }
 
+    public void ClosePage()
+    {
+        ActivateAllPages(false);
+    }
+
     public void OnNameEdit()
     {
         if (GameManager.CurrentCampaign.GetPageById(currentPageId) != null)
@@ -91,7 +96,14 @@ public class MainPanelBehaviour : MonoBehaviour
 
     public void OpenPage(Page page)
     {
+        header.gameObject.SetActive(true);
         currentPageId = page.id;
+        GameManager.Instance.linksPanel.gameObject.SetActive(true);
+        UpdateItems();
+        ActivateAllPages(false, page.pageType);
+        GetPageByType(page.pageType).SetText(page.texts);
+        if (page.imagePaths.Count > 0)
+            mainImage.path = page.imagePaths[0];
     }
 
     public void OpenPage(int id)
