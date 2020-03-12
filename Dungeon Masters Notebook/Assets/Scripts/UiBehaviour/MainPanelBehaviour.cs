@@ -33,6 +33,10 @@ public class MainPanelBehaviour : MonoBehaviour
         header.gameObject.SetActive(false);
         blankPage.gameObject.SetActive(false);
         characterpage.gameObject.SetActive(false);
+        itemPage.gameObject.SetActive(false);
+        groupPage.gameObject.SetActive(false);
+        locationPage.gameObject.SetActive(false);
+        questPage.gameObject.SetActive(false);
     }
 
     public void UpdateItems()

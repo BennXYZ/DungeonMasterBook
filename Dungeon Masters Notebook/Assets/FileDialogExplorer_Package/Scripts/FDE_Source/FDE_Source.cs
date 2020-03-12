@@ -247,7 +247,7 @@ public class FDE_Source : MonoBehaviour {
     }
     private void A_Internal_UI_Drag()
     {
-        FDE_SourceObject.transform.position = new Vector3(XOff+Input.mousePosition.x,YOff+Input.mousePosition.y,0);
+        //FDE_SourceObject.transform.position = new Vector3(XOff+Input.mousePosition.x,YOff+Input.mousePosition.y,0);
     }
     #endregion
 
