@@ -8,7 +8,7 @@ public class PageBehaviour : MonoBehaviour
     [SerializeField]
     List<TMP_InputField> inputFields;
 
-    private void Awake()
+    public virtual void Awake()
     {
         for (int i = 0; i < inputFields.Count; i++)
         {
@@ -17,7 +17,7 @@ public class PageBehaviour : MonoBehaviour
         }
     }
 
-    private void TextChanged(string newText, int textId)
+    public virtual void TextChanged(string newText, int textId)
     {
         if(GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts.Count <= textId)
         {
@@ -26,7 +26,7 @@ public class PageBehaviour : MonoBehaviour
         GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts[textId] = newText;
     }
 
-    public void SetText(List<string> texts)
+    public virtual void SetText(List<string> texts)
     {
         for (int i = 0; i < inputFields.Count; i++)
         {
