@@ -57,8 +57,10 @@ public class GameManager : MonoBehaviour
     {
         pagesPanel.Clear();
         campaignSelection.gameObject.SetActive(true);
-        mainPanel.pagetagSelection.Initialize();
-        //currentCampaign = new Campaign();
+        for (int i = 0; i < mainPanel.pagetagSelections.Length; i++)
+        {
+            mainPanel.pagetagSelections[i].Initialize();
+        }
     }
 
     public void SetFavoriteFilter(bool val)
@@ -90,6 +92,10 @@ public class GameManager : MonoBehaviour
     public void SetGroupFilter(bool val)
     {
         SetPageFilter(PageTypes.Group, val);
+    }
+    public void SetMapFilter(bool val)
+    {
+
     }
 
     public void SetPageFilter(PageTypes pageType, bool val)
@@ -137,7 +143,7 @@ public class GameManager : MonoBehaviour
         pagesPanel.LoadPages();
         tagsPanel.LoadTags();
         mainPanel.OpenPage(currentCampaign.pages[0]);
-        tagsPanel.pagetags.UpdateTags();
+        tagsPanel.UpdatePageTags();
     }
 
     public void StartLoadingImageURL(Page page, int textureId)
@@ -181,7 +187,7 @@ public class GameManager : MonoBehaviour
         AddPage("Blank");
         SaveSystem.SaveCampaign(CurrentCampaign);
         campaignTitle.text = name;
-        tagsPanel.pagetags.UpdateTags();
+        tagsPanel.UpdatePageTags();
     }
 
     public static void CreateNewCampaign(string name)

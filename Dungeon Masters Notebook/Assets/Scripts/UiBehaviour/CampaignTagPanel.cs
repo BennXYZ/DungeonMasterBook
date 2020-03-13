@@ -8,7 +8,7 @@ public class CampaignTagPanel : MonoBehaviour
 
     public GameObject tagPrefab;
 
-    public PagetagSelection pagetags;
+    public PagetagSelection[] pagetags;
 
     public List<TagItem> items;
 
@@ -63,19 +63,27 @@ public class CampaignTagPanel : MonoBehaviour
         }
         items.Remove(item);
         Destroy(item.gameObject);
-        pagetags.UpdateTags();
+        UpdatePageTags();
+    }
+
+    public void UpdatePageTags()
+    {
+        for (int i = 0; i < pagetags.Length; i++)
+        {
+            pagetags[i].UpdateTags();
+        }
     }
 
     public void OnTagEdit(TagItem item)
     {
-        pagetags.UpdateTags();
+        UpdatePageTags();
     }
 
     public void AddTag()
     {
         GameManager.CurrentCampaign.tags.Add(new Tag("New Tag"));
         CreateTag("New Tag");
-        pagetags.UpdateTags();
+        UpdatePageTags();
         items[items.Count - 1].nameInput.Select();
     }
 

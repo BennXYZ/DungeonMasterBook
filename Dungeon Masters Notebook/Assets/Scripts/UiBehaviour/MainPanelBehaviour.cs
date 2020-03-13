@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class MainPanelBehaviour : MonoBehaviour
 {
     public int currentPageId;
-    public TMP_InputField inputField;
-    public ImageLoader mainImage;
-    public PagetagSelection pagetagSelection;
-    public Toggle favoriteToggle;
+    public List<TMP_InputField> nameInputFields;
+    public ImageLoader imageLoader;
+    public PagetagSelection[] pagetagSelections;
+    public Toggle[] favoriteToggles;
     public GameObject header;
 
 
@@ -27,22 +27,34 @@ public class MainPanelBehaviour : MonoBehaviour
     {
         if (GameManager.CurrentCampaign.GetPageById(currentPageId) != null)
         {
-            favoriteToggle.isOn = GameManager.CurrentCampaign.GetPageById(currentPageId).favorite;
-            inputField.text = GameManager.CurrentCampaign.GetPageById(currentPageId).name;
-            if(GameManager.CurrentCampaign.GetPageById(currentPageId).textures.Count > 0)
+            for (int i = 0; i < favoriteToggles.Length; i++)
             {
-                mainImage.image.sprite = GameManager.CurrentCampaign.GetPageById(currentPageId).textures[0];
+                favoriteToggles[i].isOn = GameManager.CurrentCampaign.GetPageById(currentPageId).favorite;
+            }
+            for (int i = 0; i < nameInputFields.Count; i++)
+            {
+                nameInputFields[i].text = GameManager.CurrentCampaign.GetPageById(currentPageId).name;
+            }
+            if (GameManager.CurrentCampaign.GetPageById(currentPageId).textures.Count > 0)
+            {
+                for (int i = 0; i < imageLoader.images.Length; i++)
+                {
+                    imageLoader.images[i].sprite = GameManager.CurrentCampaign.GetPageById(currentPageId).textures[0];
+                }
             }
             else if (GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths.Count > 0)
             {
-                mainImage.path = GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths[0];
-                mainImage.LoadImageChecked();
+                imageLoader.path = GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths[0];
+                imageLoader.LoadImageChecked();
             }
             else
             {
-                mainImage.ClearImage();
+                imageLoader.ClearImage();
             }
-            pagetagSelection.SetPageTags();
+            for (int i = 0; i < pagetagSelections.Length; i++)
+            {
+                pagetagSelections[i].SetPageTags();
+            }
             GameManager.Instance.linksPanel.SetLinksToCurrentPage();
         }
     }
@@ -59,11 +71,11 @@ public class MainPanelBehaviour : MonoBehaviour
         ActivateAllPages(false);
     }
 
-    public void OnNameEdit()
+    public void OnNameEdit(string newName)
     {
         if (GameManager.CurrentCampaign.GetPageById(currentPageId) != null)
         {
-            GameManager.CurrentCampaign.GetPageById(currentPageId).name = !string.IsNullOrEmpty(inputField.text) ? inputField.text : "New Page" ;
+            GameManager.CurrentCampaign.GetPageById(currentPageId).name = !string.IsNullOrEmpty(newName) ? newName : "New Page" ;
             PageChanged();
         }
     }
@@ -72,16 +84,17 @@ public class MainPanelBehaviour : MonoBehaviour
     {
         if (GameManager.CurrentCampaign.GetPageById(currentPageId) != null)
         {
-            if(GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths.Count > 0)
+            if (GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths.Count > 0)
             {
-                GameManager.CurrentCampaign.GetPageById(currentPageId).textures[0] = mainImage.image.sprite;
-                GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths[0] = mainImage.path;
+                GameManager.CurrentCampaign.GetPageById(currentPageId).textures[0] = imageLoader.currentlyLoadedSprite;
+                GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths[0] = imageLoader.path;
             }
             else
             {
-                GameManager.CurrentCampaign.GetPageById(currentPageId).textures.Add(mainImage.image.sprite);
-                GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths.Add(mainImage.path);
+                GameManager.CurrentCampaign.GetPageById(currentPageId).textures.Add(imageLoader.currentlyLoadedSprite);
+                GameManager.CurrentCampaign.GetPageById(currentPageId).imagePaths.Add(imageLoader.path);
             }
+
             PageChanged();
         }
     }
@@ -103,7 +116,9 @@ public class MainPanelBehaviour : MonoBehaviour
         ActivateAllPages(false, page.pageType);
         GetPageByType(page.pageType).SetText(page.texts);
         if (page.imagePaths.Count > 0)
-            mainImage.path = page.imagePaths[0];
+        {
+            imageLoader.path = page.imagePaths[0];
+        } 
     }
 
     public void OpenPage(int id)
@@ -117,13 +132,15 @@ public class MainPanelBehaviour : MonoBehaviour
             ActivateAllPages(false, GameManager.CurrentCampaign.GetPageById(id).pageType);
             GetPageByType(GameManager.CurrentCampaign.GetPageById(id).pageType).SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
             if (GameManager.CurrentCampaign.GetPageById(id).imagePaths.Count > 0)
-                mainImage.path = GameManager.CurrentCampaign.GetPageById(id).imagePaths[0];
+            {
+                imageLoader.path = GameManager.CurrentCampaign.GetPageById(id).imagePaths[0];
+            }
         }
     }
     
     public void ActivateAllPages(bool val, PageTypes exception = PageTypes.Default)
     {
-        if(exception == PageTypes.Default)
+        if(exception == PageTypes.Default || exception == PageTypes.Map)
         {
             header.gameObject.SetActive(val);
             GameManager.Instance.linksPanel.gameObject.SetActive(val);

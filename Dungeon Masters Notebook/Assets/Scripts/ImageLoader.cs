@@ -6,25 +6,36 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using SFB;
 
 public class ImageLoader : MonoBehaviour
 {
     [HideInInspector]
     public string path;
 
-    public Image image;
+    public Sprite currentlyLoadedSprite;
+
+    public Image[] images;
 
     public UnityEvent onImageChanged;
 
     public TMP_InputField urlInput;
 
-    public FDE_Source fde;
-
     public void ClearImage()
     {
-        image.sprite = null;
+        currentlyLoadedSprite = null;
+        SetImagesToCurrentSprite();
+
         path = string.Empty;
         onImageChanged.Invoke();
+    }
+
+    public void SetImagesToCurrentSprite()
+    {
+        for (int i = 0; i < images.Length; i++)
+        {
+            images[i].sprite = currentlyLoadedSprite;
+        }
     }
 
     public void LoadImageChecked()
@@ -43,13 +54,17 @@ public class ImageLoader : MonoBehaviour
     {
         if (path == null)
             path = "";
-        //string newPath = EditorUtility.OpenFilePanel("Open image file", path, "png,jpg,jpeg");
-        //if(path.Length <= 0 || newPath.Length > 0)
-        //{
-        //    path = "file:///" + newPath;
-        //}
-        //LoadImage();
-        //onImageChanged.Invoke();
+
+        ExtensionFilter[] extenstions = new ExtensionFilter[1];
+        extenstions[0] = new ExtensionFilter("Images", "png", "jpg");
+
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open Image", "", extenstions, false);
+        if(paths.Length > 0)
+        {
+            path = "file:///" + paths[0];
+        }
+        LoadImage();
+        onImageChanged.Invoke();
     }
 
     public void OnExplorerClose()
@@ -65,12 +80,19 @@ public class ImageLoader : MonoBehaviour
         onImageChanged.Invoke();
     }
 
+    public void Test()
+    {
+        ExtensionFilter[] extenstions = new ExtensionFilter[1];
+        extenstions[0] = new ExtensionFilter("Images", "png", "jpg");
+
+        path = StandaloneFileBrowser.OpenFilePanel("Open Image","", extenstions, false )[0];
+    }
+
     public void LoadViaUrl()
     {
-        if(urlInput.text.Length > 0)
+        if(urlInput.text.Length > 0 && gameObject.activeInHierarchy)
         {
             path = urlInput.text;
-            FDE_Source lel;
             StartCoroutine("WaitForImage");
             urlInput.text = "";
         }
@@ -91,13 +113,15 @@ public class ImageLoader : MonoBehaviour
 
         if (!imageRequest.isDone || www.isNetworkError || www.isHttpError)
         {
-            image.sprite = null;
+            currentlyLoadedSprite = null;
+            SetImagesToCurrentSprite();
         }
         else
         {
             //return valid results:
             Texture2D result = DownloadHandlerTexture.GetContent(www);
-            image.sprite = Sprite.Create(result, new Rect(0, 0, result.width, result.height), Vector2.one * 0.5f);
+            currentlyLoadedSprite = Sprite.Create(result, new Rect(0, 0, result.width, result.height), Vector2.one * 0.5f);
+            SetImagesToCurrentSprite();
         }
         onImageChanged.Invoke();
     }
@@ -107,11 +131,13 @@ public class ImageLoader : MonoBehaviour
         if (!string.IsNullOrEmpty(path))
         {
             WWW www = new WWW(path);
-            image.sprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), Vector2.one * 0.5f);
+            currentlyLoadedSprite = Sprite.Create(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), Vector2.one * 0.5f);
+            SetImagesToCurrentSprite();
         }
         else
         {
-            image.sprite = null;
+            currentlyLoadedSprite = null;
+            SetImagesToCurrentSprite();
         }
     }
 }
