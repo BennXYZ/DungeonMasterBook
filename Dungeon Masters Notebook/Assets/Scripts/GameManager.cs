@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
 
     public PagesPanel pagesPanel;
 
+    public WarningNotification notificationWindow;
+
     public CampaignTagPanel tagsPanel;
 
     public MainPanelBehaviour mainPanel;
@@ -66,6 +68,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         pagesPanel.Clear();
+        notificationWindow.SetInstance();
         campaignSelection.gameObject.SetActive(true);
         for (int i = 0; i < mainPanel.pagetagSelections.Length; i++)
         {

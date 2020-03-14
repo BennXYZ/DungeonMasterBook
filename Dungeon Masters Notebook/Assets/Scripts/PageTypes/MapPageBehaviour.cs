@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ public class MapPageBehaviour : PageBehaviour
 {
     public List<MapItem> items;
     List<MapItemLink> linkItems;
+
+    public TMP_Text panelTitle;
 
     public GameObject mapItemPrefab;
     public RectTransform mapItemsParent;
@@ -210,8 +213,13 @@ public class MapPageBehaviour : PageBehaviour
         isCreatingLink = false;
     }
 
-        public MapItem SpawnItem(string text)
+    public MapItem SpawnItem(string text)
     {
+        if(GameManager.CurrentCampaign.GetPageById(MapItemDataConverter.GetId(text)) == null)
+        {
+            return null;
+        }
+
         items.Add(Instantiate(mapItemPrefab, mapItemsParent).GetComponent<MapItem>());
         int newItemId = items.Count - 1;
         items[newItemId].SetPage(GameManager.Instance.currentCampaign.GetPageById(MapItemDataConverter.GetId(text)));
@@ -304,6 +312,7 @@ public class MapPageBehaviour : PageBehaviour
                     {
                         GameManager.Instance.inMenu = true;
                         mapItemContextMenu.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Vector3.forward * mapItemContextMenu.position.z;
+                        panelTitle.text = items[currentHoverItem].page.name;
                         onItempressedEvent.Invoke();
                     }
                 }

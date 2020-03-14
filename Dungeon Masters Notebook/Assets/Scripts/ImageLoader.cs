@@ -80,6 +80,14 @@ public class ImageLoader : MonoBehaviour
         onImageChanged.Invoke();
     }
 
+    private void OnEnable()
+    {
+        if(urlInput != null)
+        {
+            urlInput.interactable = true;
+        }
+    }
+
     public void Test()
     {
         ExtensionFilter[] extenstions = new ExtensionFilter[1];
@@ -90,11 +98,10 @@ public class ImageLoader : MonoBehaviour
 
     public void LoadViaUrl()
     {
-        if(urlInput.text.Length > 0 && gameObject.activeInHierarchy)
+        if(urlInput.text.Length > 0)
         {
             path = urlInput.text;
-            StartCoroutine("WaitForImage");
-            urlInput.text = "";
+            StartCoroutine(WaitForImage());
         }
     }
 

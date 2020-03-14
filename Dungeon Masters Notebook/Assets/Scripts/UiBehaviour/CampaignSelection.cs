@@ -62,7 +62,7 @@ public class CampaignSelection : MonoBehaviour
         }
     }
 
-    public void RemoveCampaign(CampaignLoadingItem item)
+    void ActuallyRemoveCampaign(CampaignLoadingItem item)
     {
         int index = items.IndexOf(item);
         int numberOfCampaigns = PlayerPrefs.GetInt(campaignsCountGetter, 0);
@@ -73,6 +73,11 @@ public class CampaignSelection : MonoBehaviour
         PlayerPrefs.SetInt(campaignsCountGetter, PlayerPrefs.GetInt(campaignsCountGetter, 0) - 1);
         Destroy(item.gameObject);
         items.Remove(item);
+    }
+
+    public void RemoveCampaign(CampaignLoadingItem item)
+    {
+        WarningNotification.OpenNotificationWindow("Do you really want to delete the Campaign " + item.title.text + "?", delegate { ActuallyRemoveCampaign(item); });
     }
 
     public void OpenCampaign(CampaignLoadingItem item)

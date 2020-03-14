@@ -93,6 +93,6 @@ public class PagePanelItem : MonoBehaviour
 
     public void OnRemove()
     {
-        onRemove.Invoke();
+        WarningNotification.OpenNotificationWindow("Do you really want to delete the page " + page.name + "?", delegate { onRemove.Invoke(); });   
     }
 }
