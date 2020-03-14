@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class MapPageBehaviour : PageBehaviour
 {
     public List<MapItem> items;
+    List<MapItemLink> linkItems;
 
     public GameObject mapItemPrefab;
     public RectTransform mapItemsParent;
@@ -19,6 +20,9 @@ public class MapPageBehaviour : PageBehaviour
     public UnityEvent onItempressedEvent;
     public RectTransform mapItemContextMenu;
     public Slider sizeSlider;
+
+    int currentLinkId = -1;
+    bool isCreatingLink = true;
 
     int currentHoverItem = -1;
 
@@ -45,6 +49,7 @@ public class MapPageBehaviour : PageBehaviour
     public override void Awake()
     {
         base.Awake();
+        linkItems = new List<MapItemLink>();
         previourMousePosition = Input.mousePosition;
         startMousePosition = Input.mousePosition;
     }
@@ -83,6 +88,7 @@ public class MapPageBehaviour : PageBehaviour
 
     private void OnDisable()
     {
+        currentLinkId = -1;
         Clear();
     }
 
@@ -120,8 +126,43 @@ public class MapPageBehaviour : PageBehaviour
         }
     }
 
+    public MapItem SpawnItem(int id, Vector2 originPosition, float rotationalOffset)
+    {
+        if (GetItemById(id) != null || id == GameManager.Instance.mainPanel.currentPageId)
+        {
+            return null;
+        }
+
+        MapItem newItem = SpawnItem(id);
+        float offsetX = Mathf.Sin(rotationalOffset * Mathf.PI * 2); float offsetY = Mathf.Cos(rotationalOffset * Mathf.PI * 2);
+        newItem.rectTransform.anchorMin = originPosition;
+        newItem.rectTransform.anchorMin = Utils.NewVector2((((newItem.rectTransform.parent as RectTransform).rect.width * newItem.rectTransform.anchorMin.x) - offsetX * 100) 
+            / (newItem.rectTransform.parent as RectTransform).rect.width, (((newItem.rectTransform.parent as RectTransform).rect.height * 
+            newItem.rectTransform.anchorMin.y) - offsetY * 100) / (newItem.rectTransform.parent as RectTransform).rect.height);
+        newItem.rectTransform.anchorMax = newItem.rectTransform.anchorMin;
+
+        newItem.rectTransform.offsetMax = Vector2.zero;
+        newItem.rectTransform.offsetMin = Vector2.zero;
+
+        //newItem.rectTransform.offsetMax = new Vector3(offsetX * 100, offsetY * 100, newItem.rectTransform.localPosition.z);
+        //newItem.rectTransform.offsetMin = new Vector3(offsetX * 100, offsetY * 100, newItem.rectTransform.localPosition.z);
+        newItem.rectTransform.sizeDelta = Vector2.one * (10 + 150 * sizeSlider.value);
+        //newItem.transform.position = Utils.NewVector3(originPosition.x + Mathf.Sin(rotationalOffset * Mathf.PI * 2), originPosition.y + Mathf.Cos(rotationalOffset * Mathf.PI * 2),
+        //    originPosition.z);
+        //UpdateAnchorsFromLocalposition(items.IndexOf(newItem));
+
+        GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts
+            [GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts.Count - 1] = (MapItemDataConverter.GetTextFromItem(id, newItem.rectTransform.anchorMin));
+
+        return newItem;
+    }
+
     public MapItem SpawnItem(int id)
     {
+        if(GetItemById(id) != null || id == GameManager.Instance.mainPanel.currentPageId)
+        {
+            return null;
+        }
         items.Add(Instantiate(mapItemPrefab, mapItemsParent).GetComponent<MapItem>());
         int newItemId = items.Count - 1;
         items[newItemId].SetPage(GameManager.Instance.currentCampaign.GetPageById(id));
@@ -150,14 +191,26 @@ public class MapPageBehaviour : PageBehaviour
             if(items[newItemId].page.links.Contains(items[i].page.id) || items[i].page.links.Contains(items[newItemId].page.id))
             {
                 int foundItem = i;
-                Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[newItemId].gameObject.transform, items[foundItem].gameObject.transform, sizeSlider);
+                linkItems.Add(Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[newItemId].gameObject.transform, items[foundItem].gameObject.transform, sizeSlider));
             }
         }
 
         return items[newItemId];
     }
 
-    public MapItem SpawnItem(string text)
+    public void InitiateLinking()
+    {
+        currentLinkId = items[currentHoverItem].page.id;
+        isCreatingLink = true;
+    }
+
+    public void InitiateUnlinking()
+    {
+        currentLinkId = items[currentHoverItem].page.id;
+        isCreatingLink = false;
+    }
+
+        public MapItem SpawnItem(string text)
     {
         items.Add(Instantiate(mapItemPrefab, mapItemsParent).GetComponent<MapItem>());
         int newItemId = items.Count - 1;
@@ -177,7 +230,7 @@ public class MapPageBehaviour : PageBehaviour
             if (items[newItemId].page.links.Contains(items[i].page.id))
             {
                 int foundItem = i;
-                Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[newItemId].gameObject.transform, items[foundItem].gameObject.transform, sizeSlider);
+                linkItems.Add(Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[newItemId].gameObject.transform, items[foundItem].gameObject.transform, sizeSlider));
             }
         }
 
@@ -232,31 +285,128 @@ public class MapPageBehaviour : PageBehaviour
             }
             else if (Input.GetMouseButtonUp(0) && currentHoverItem >= 0)
             {
-                Vector2 positionOnParent = Vector2.right * items[currentHoverItem].rectTransform.anchorMin.x * mapItemsParent.rect.width +
-                    Vector2.up * items[currentHoverItem].rectTransform.anchorMin.y * mapItemsParent.rect.height;
-                positionOnParent += ((Vector2)Input.mousePosition - startMousePosition);
-
-                Vector2 deltaMovement = Vector2.right * (Input.mousePosition.x - startMousePosition.x) / mapItemsParent.rect.width +
-                    Vector2.up * (Input.mousePosition.y - startMousePosition.y) / mapItemsParent.rect.height;
-
-                Vector2 size = items[currentHoverItem].rectTransform.sizeDelta;
-                items[currentHoverItem].rectTransform.offsetMin = Vector2.zero;
-                items[currentHoverItem].rectTransform.offsetMax = Vector2.zero;
-                items[currentHoverItem].rectTransform.anchorMin = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
-                items[currentHoverItem].rectTransform.anchorMin = Vector2.right * Mathf.Max(Mathf.Min(items[currentHoverItem].rectTransform.anchorMin.x, 1), 0)
-                    + Vector2.up * Mathf.Max(Mathf.Min(items[currentHoverItem].rectTransform.anchorMin.y, 1), 0);
-                items[currentHoverItem].rectTransform.anchorMax = items[currentHoverItem].rectTransform.anchorMin;
-                items[currentHoverItem].rectTransform.sizeDelta = size;
-
-                items[currentHoverItem].onEndMove.Invoke();
+                UpdateCurrentHoverAnchors();
                 if (!isDrag)
                 {
-                    GameManager.Instance.inMenu = true;
-                    mapItemContextMenu.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Vector3.forward * mapItemContextMenu.position.z;
-                    onItempressedEvent.Invoke();
+                    if(currentLinkId >= 0)
+                    {
+                        if(isCreatingLink)
+                        {
+                            CreateLink(currentLinkId, items[currentHoverItem].page.id);
+                        }
+                        else
+                        {
+                            RemoveLink(currentLinkId, items[currentHoverItem].page.id);
+                        }
+                        currentLinkId = -1;
+                    }
+                    else
+                    {
+                        GameManager.Instance.inMenu = true;
+                        mapItemContextMenu.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Vector3.forward * mapItemContextMenu.position.z;
+                        onItempressedEvent.Invoke();
+                    }
                 }
             }
         }
+    }
+
+    public void UpdateAnchorsFromLocalposition(int itemId)
+    {
+        if (GetItemById(itemId) == null)
+            return;
+        Vector2 positionOnParent = Utils.NewVector2(((items[itemId].rectTransform.parent as RectTransform).rect.width * items[itemId].rectTransform.anchorMin.x - 
+            items[itemId].rectTransform.offsetMin.x) / (items[itemId].rectTransform.parent as RectTransform).rect.width,
+            ((items[itemId].rectTransform.parent as RectTransform).rect.height * items[itemId].rectTransform.anchorMin.y -
+            items[itemId].rectTransform.offsetMin.y) / (items[itemId].rectTransform.parent as RectTransform).rect.height);
+        positionOnParent += ((Vector2)Input.mousePosition - startMousePosition);
+
+        Vector2 size = items[itemId].rectTransform.sizeDelta;
+        items[itemId].rectTransform.offsetMin = Vector2.zero;
+        items[itemId].rectTransform.offsetMax = Vector2.zero;
+        items[itemId].rectTransform.anchorMin = positionOnParent;
+        items[itemId].rectTransform.anchorMin = Vector2.right * Mathf.Max(Mathf.Min(items[itemId].rectTransform.anchorMin.x, 1), 0)
+            + Vector2.up * Mathf.Max(Mathf.Min(items[itemId].rectTransform.anchorMin.y, 1), 0);
+        items[itemId].rectTransform.anchorMax = items[itemId].rectTransform.anchorMin;
+        items[itemId].rectTransform.sizeDelta = size;
+
+        items[itemId].onEndMove.Invoke();
+    }
+
+    public void UpdateCurrentHoverAnchors()
+    {
+        Vector2 positionOnParent = Vector2.right * items[currentHoverItem].rectTransform.anchorMin.x * mapItemsParent.rect.width +
+    Vector2.up * items[currentHoverItem].rectTransform.anchorMin.y * mapItemsParent.rect.height;
+        positionOnParent += ((Vector2)Input.mousePosition - startMousePosition);
+
+        Vector2 deltaMovement = Vector2.right * (Input.mousePosition.x - startMousePosition.x) / mapItemsParent.rect.width +
+            Vector2.up * (Input.mousePosition.y - startMousePosition.y) / mapItemsParent.rect.height;
+
+        Vector2 size = items[currentHoverItem].rectTransform.sizeDelta;
+        items[currentHoverItem].rectTransform.offsetMin = Vector2.zero;
+        items[currentHoverItem].rectTransform.offsetMax = Vector2.zero;
+        items[currentHoverItem].rectTransform.anchorMin = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
+        items[currentHoverItem].rectTransform.anchorMin = Vector2.right * Mathf.Max(Mathf.Min(items[currentHoverItem].rectTransform.anchorMin.x, 1), 0)
+            + Vector2.up * Mathf.Max(Mathf.Min(items[currentHoverItem].rectTransform.anchorMin.y, 1), 0);
+        items[currentHoverItem].rectTransform.anchorMax = items[currentHoverItem].rectTransform.anchorMin;
+        items[currentHoverItem].rectTransform.sizeDelta = size;
+
+        items[currentHoverItem].onEndMove.Invoke();
+    }
+
+    private void CreateLink(int aId, int bId)
+    {
+        if (GameManager.CurrentCampaign.GetPageById(aId).links.Contains(bId) || GameManager.CurrentCampaign.GetPageById(bId).links.Contains(aId) || aId == bId)
+            return;
+        else
+        {
+            GameManager.CurrentCampaign.GetPageById(aId).links.Add(bId);
+            GameManager.CurrentCampaign.GetPageById(bId).links.Add(aId);
+            linkItems.Add(Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(GetItemById(aId).gameObject.transform,GetItemById(bId).gameObject.transform, sizeSlider));
+        }
+    }
+
+    private void RemoveLink(int aId, int bId)
+    {
+        GameManager.CurrentCampaign.GetPageById(aId).links.Remove(bId);
+        GameManager.CurrentCampaign.GetPageById(bId).links.Remove(aId);
+        for (int i = 0; i < linkItems.Count; i++)
+        {
+            if(linkItems[i].firstObject == GetItemById(aId).transform && linkItems[i].secondObject == GetItemById(bId).transform ||
+                linkItems[i].secondObject == GetItemById(aId).transform && linkItems[i].firstObject == GetItemById(bId).transform)
+            {
+                Destroy(linkItems[i].gameObject);
+                linkItems.RemoveAt(i);
+            }
+        }
+    }
+
+    public void CreateLinkedItems()
+    {
+        if(items[currentHoverItem].page.pageType == PageTypes.Map)
+        {
+            for (int i = 1; i < items[currentHoverItem].page.texts.Count; i++)
+            {
+                SpawnItem(MapItemDataConverter.GetId(items[currentHoverItem].page.texts[i]), items[currentHoverItem].rectTransform.anchorMin, (float)i / (float)items[currentHoverItem].page.texts.Count);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < items[currentHoverItem].page.links.Count; i++)
+            {
+                SpawnItem(items[currentHoverItem].page.links[i], items[currentHoverItem].rectTransform.anchorMin, (float)i / (float)items[currentHoverItem].page.links.Count);
+            }
+        }
+    }
+
+        private MapItem GetItemById(int id)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i].page.id == id)
+                return items[i];
+        }
+        return null;
     }
 
     private int GetIndexOfFirstMapItem(Vector2 pixelPosition)

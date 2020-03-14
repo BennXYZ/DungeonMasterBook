@@ -11,11 +11,12 @@ public class MapItemLink : MonoBehaviour
     public Transform secondObject;
     public Slider slider;
 
-    public void SetTransforms(Transform a, Transform b, Slider slid)
+    public MapItemLink SetTransforms(Transform a, Transform b, Slider slid)
     {
         firstObject = a;
         secondObject = b;
         slider = slid;
+        return this;
     }
 
     // Update is called once per frame

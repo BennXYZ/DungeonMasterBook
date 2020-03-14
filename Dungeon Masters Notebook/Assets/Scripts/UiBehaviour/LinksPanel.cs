@@ -13,7 +13,7 @@ public class LinksPanel : MonoBehaviour
 
     List<PagePanelItem> items;
 
-    public GameObject windowBlocker,acceptPanel;
+    public GameObject windowBlocker;
 
     int currentId;
 
@@ -69,6 +69,21 @@ public class LinksPanel : MonoBehaviour
 
     private void RemoveItem(PagePanelItem newItem)
     {
+        if(newItem.page.pageType == PageTypes.Map)
+        {
+            for (int i = 1; i < newItem.page.texts.Count; i++)
+            {
+                if(MapItemDataConverter.GetId(newItem.page.texts[i]) == GameManager.Instance.mainPanel.currentPageId)
+                {
+                    newItem.page.texts.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            GameManager.Instance.currentCampaign.GetPageById(newItem.page.id).links.Remove(GameManager.Instance.mainPanel.currentPageId);
+        }
         GameManager.CurrentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).links.Remove(newItem.page.id);
         items.Remove(newItem);
         Destroy(newItem.gameObject);
@@ -115,9 +130,10 @@ public class LinksPanel : MonoBehaviour
     internal void SelectId(int id)
     {
         currentId = id;
-        windowBlocker.SetActive(true);
+        //windowBlocker.SetActive(true);
         GameManager.isSelectingLink = !GameManager.isSelectingLink;
+        CreateTwoWayLink();
         linksNotification.gameObject.SetActive(GameManager.isSelectingLink);
-        acceptPanel.SetActive(true);
+        //acceptPanel.SetActive(true);
     }
 }
