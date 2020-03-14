@@ -150,6 +150,7 @@ public class MapPageBehaviour : PageBehaviour
         newItem.rectTransform.anchorMin = Utils.NewVector2((((newItem.rectTransform.parent as RectTransform).rect.width * newItem.rectTransform.anchorMin.x) - offsetX * 100) 
             / (newItem.rectTransform.parent as RectTransform).rect.width, (((newItem.rectTransform.parent as RectTransform).rect.height * 
             newItem.rectTransform.anchorMin.y) - offsetY * 100) / (newItem.rectTransform.parent as RectTransform).rect.height);
+        newItem.rectTransform.anchorMin = Utils.NewVector2(Mathf.Max(0, Mathf.Min(1, newItem.rectTransform.anchorMin.x)), Mathf.Max(0, Mathf.Min(1, newItem.rectTransform.anchorMin.y)));
         newItem.rectTransform.anchorMax = newItem.rectTransform.anchorMin;
 
         newItem.rectTransform.offsetMax = Vector2.zero;
@@ -273,6 +274,12 @@ public class MapPageBehaviour : PageBehaviour
 
     public void Clear()
     {
+        currentLinkId = -1;
+        if (currentlyConnectingLink != null)
+        {
+            Destroy(currentlyConnectingLink.gameObject);
+            currentlyConnectingLink = null;
+        }
         for (int i = 0; i < items.Count; i++)
         {
             Destroy(items[i].gameObject);

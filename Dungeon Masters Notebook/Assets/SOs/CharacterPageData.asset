@@ -15,3 +15,5 @@ MonoBehaviour:
   type: 2
   numberOfTexts: 6
   numberOfImages: 1
+  mapItemMask: {fileID: 21300000, guid: 72e3483eca63ad246a6392cfe6761a21, type: 3}
+  mapItemBorder: {fileID: 0}

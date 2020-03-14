@@ -11,6 +11,8 @@ public class MapItem : MonoBehaviour
 
     public UnityEvent onEndMove;
 
+    public Image borderImage;
+    public Image maskImage;
     public Image image;
     public Text text;
 
@@ -24,6 +26,7 @@ public class MapItem : MonoBehaviour
     public void UpdateVisuals()
     {
         text.text = page.name;
+        maskImage.sprite = GameManager.Instance.settingsList.GetSettings(page.pageType).mapItemMask;
         image.sprite = page.textures[0];
     }
 

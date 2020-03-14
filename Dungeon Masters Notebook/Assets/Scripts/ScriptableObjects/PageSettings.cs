@@ -8,4 +8,6 @@ public class PageSettings : ScriptableObject
     public PageTypes type;
     public int numberOfTexts;
     public int numberOfImages;
+    public Sprite mapItemMask;
+    public Sprite mapItemBorder;
 }
