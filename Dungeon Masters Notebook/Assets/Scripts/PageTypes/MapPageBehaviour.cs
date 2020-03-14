@@ -10,6 +10,7 @@ public class MapPageBehaviour : PageBehaviour
 {
     public List<MapItem> items;
     List<MapItemLink> linkItems;
+    MapItemLink currentlyConnectingLink;
 
     public TMP_Text panelTitle;
 
@@ -17,6 +18,7 @@ public class MapPageBehaviour : PageBehaviour
     public RectTransform mapItemsParent;
 
     public GameObject mapLinkPrefab;
+    public GameObject removeLinkPrefab;
 
     public float maxRangeTilDrag;
 
@@ -92,6 +94,12 @@ public class MapPageBehaviour : PageBehaviour
     private void OnDisable()
     {
         currentLinkId = -1;
+        if(currentlyConnectingLink != null)
+        {
+            Destroy(currentlyConnectingLink.gameObject);
+            currentlyConnectingLink = null;
+        }
+
         Clear();
     }
 
@@ -203,13 +211,17 @@ public class MapPageBehaviour : PageBehaviour
 
     public void InitiateLinking()
     {
-        currentLinkId = items[currentHoverItem].page.id;
+        currentLinkId = items[currentHoverItem].page.id; 
+        currentlyConnectingLink = Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[currentHoverItem].transform, null, sizeSlider);
+        currentlyConnectingLink.followMouse = true;
         isCreatingLink = true;
     }
 
     public void InitiateUnlinking()
     {
         currentLinkId = items[currentHoverItem].page.id;
+        currentlyConnectingLink = Instantiate(removeLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[currentHoverItem].transform, null, sizeSlider);
+        currentlyConnectingLink.followMouse = true;
         isCreatingLink = false;
     }
 
@@ -305,6 +317,11 @@ public class MapPageBehaviour : PageBehaviour
                         else
                         {
                             RemoveLink(currentLinkId, items[currentHoverItem].page.id);
+                        }
+                        if (currentlyConnectingLink != null)
+                        {
+                            Destroy(currentlyConnectingLink.gameObject);
+                            currentlyConnectingLink = null;
                         }
                         currentLinkId = -1;
                     }
