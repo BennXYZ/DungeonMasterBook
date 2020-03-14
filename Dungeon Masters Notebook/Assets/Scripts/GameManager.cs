@@ -149,6 +149,15 @@ public class GameManager : MonoBehaviour
         linksPanel.SelectId(id);
     }
 
+    public void Load()
+    {
+        campaignTitle.text = CurrentCampaign.name;
+        pagesPanel.LoadPages();
+        tagsPanel.LoadTags();
+        mainPanel.OpenPage(currentCampaign.pages[0]);
+        tagsPanel.UpdatePageTags();
+    }
+
     public void Load(string title)
     {
         currentCampaign = new Campaign(SaveSystem.LoadCampaign(title));

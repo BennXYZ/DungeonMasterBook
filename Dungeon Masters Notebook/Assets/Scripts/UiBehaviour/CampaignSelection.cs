@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
 using UnityEngine;
 
@@ -84,5 +85,46 @@ public class CampaignSelection : MonoBehaviour
     {
         GameManager.OpenCampaign(item.title.text);
         gameObject.SetActive(false);
+    }
+
+    public void ImportCampaign()
+    {
+        string[] paths = SFB.StandaloneFileBrowser.OpenFilePanel("Import Campaign", "", "book", false);
+        if(paths.Length > 0)
+        {
+            string path = paths[0];
+            if (File.Exists(path))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                FileStream stream = new FileStream(path, FileMode.Open);
+
+                CampaignData data = formatter.Deserialize(stream) as CampaignData;
+
+                stream.Close();
+
+                GameManager.Instance.currentCampaign = new Campaign(data);
+                GameManager.Instance.Load();
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                Debug.LogError("No File Found in " + path);
+            }
+        }
+    }
+
+    public void ExportCampaign()
+    {
+        string path = SFB.StandaloneFileBrowser.SaveFilePanel("Export Campaign", "", GameManager.CurrentCampaign.name, "book");
+        if(!string.IsNullOrEmpty(path))
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream stream = new FileStream(path, FileMode.Create);
+
+            CampaignData data = new CampaignData(GameManager.CurrentCampaign);
+
+            formatter.Serialize(stream, data);
+            stream.Close();
+        }
     }
 }
