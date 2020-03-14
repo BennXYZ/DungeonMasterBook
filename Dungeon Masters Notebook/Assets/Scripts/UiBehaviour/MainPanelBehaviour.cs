@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -64,6 +65,24 @@ public class MainPanelBehaviour : MonoBehaviour
         GameManager.CurrentCampaign.GetPageById(currentPageId).favorite = val;
         GameManager.CurrentCampaign.GetPageById(currentPageId).onPageChanged.Invoke();
         GameManager.Instance.pagesPanel.FilterPages();
+    }
+
+    public void SelectPage()
+    {
+        GameManager.isSelectingMapitem = !GameManager.isSelectingMapitem;
+    }
+
+    public void AddItemToMap(int id)
+    {
+        MapPageBehaviour mapPage;
+        for (int i = 0; i < pageBehaviours.Count; i++)
+        {
+            mapPage = pageBehaviours[i].page as MapPageBehaviour;
+            if(mapPage != null)
+            {
+                mapPage.AddPage(id);
+            }
+        }
     }
 
     public void ClosePage()

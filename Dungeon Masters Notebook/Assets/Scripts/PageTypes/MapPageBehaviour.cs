@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class MapPageBehaviour : PageBehaviour
 {
@@ -11,6 +12,9 @@ public class MapPageBehaviour : PageBehaviour
     public RectTransform mapItemsParent;
 
     public float maxRangeTilDrag;
+
+    public UnityEvent onItempressedEvent;
+    public RectTransform mapItemContextMenu;
 
     int currentHoverItem = -1;
 
@@ -74,6 +78,20 @@ public class MapPageBehaviour : PageBehaviour
         {
             if(items[i].page.id == id)
             {
+                if(items[i].page.pageType == PageTypes.Map)
+                {
+                    for (int j = 0; j < items[i].page.texts.Count; j++)
+                    {
+                        if(MapItemDataConverter.GetId(items[i].page.texts[j]) == GameManager.Instance.mainPanel.currentPageId)
+                        {
+                            items[i].page.texts.RemoveAt(j);
+                        }
+                    }
+                }
+                else
+                {
+                    items[i].page.links.Remove(GameManager.Instance.mainPanel.currentPageId);
+                }
                 Destroy(items[i].gameObject);
                 items.RemoveAt(i);
             }
@@ -84,9 +102,17 @@ public class MapPageBehaviour : PageBehaviour
     {
         items.Add(Instantiate(mapItemPrefab, mapItemsParent).GetComponent<MapItem>());
         int newItemId = items.Count - 1;
-        items[newItemId].page = GameManager.Instance.currentCampaign.GetPageById(id);
+        items[newItemId].SetPage(GameManager.Instance.currentCampaign.GetPageById(id));
+        if(items[newItemId].page.pageType != PageTypes.Map && !items[newItemId].page.links.Contains(GameManager.Instance.mainPanel.currentPageId))
+        {
+            items[newItemId].page.links.Add(GameManager.Instance.mainPanel.currentPageId);
+        }
+        else if(items[newItemId].page.pageType == PageTypes.Map)
+        {
+            items[newItemId].page.texts.Add(MapItemDataConverter.GetTextFromItem(GameManager.Instance.mainPanel.currentPageId, Vector2.one * 0.5f));
+        }
         items[newItemId].onEndMove = new UnityEngine.Events.UnityEvent();
-        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[newItemId].page.id, items[newItemId].rectTransform.anchorMin), newItemId); });
+        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[currentHoverItem].page.id, items[currentHoverItem].rectTransform.anchorMin), currentHoverItem); });
 
         Vector2 size = items[newItemId].rectTransform.sizeDelta;
         items[newItemId].rectTransform.anchorMin = Vector2.one * 0.5f;
@@ -104,9 +130,9 @@ public class MapPageBehaviour : PageBehaviour
     {
         items.Add(Instantiate(mapItemPrefab, mapItemsParent).GetComponent<MapItem>());
         int newItemId = items.Count - 1;
-        items[newItemId].page = GameManager.Instance.currentCampaign.GetPageById(MapItemDataConverter.GetId(text));
+        items[newItemId].SetPage(GameManager.Instance.currentCampaign.GetPageById(MapItemDataConverter.GetId(text)));
         items[newItemId].onEndMove = new UnityEngine.Events.UnityEvent();
-        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[newItemId].page.id, items[newItemId].rectTransform.anchorMin), newItemId); });
+        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[currentHoverItem].page.id, items[currentHoverItem].rectTransform.anchorMin), currentHoverItem); });
 
         Vector2 size = items[newItemId].rectTransform.sizeDelta;
         items[newItemId].rectTransform.anchorMin = MapItemDataConverter.GetPosition(text);
@@ -128,47 +154,51 @@ public class MapPageBehaviour : PageBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if(!GameManager.Instance.prevMenu)
         {
-            currentHoverItem = GetIndexOfFirstMapItem(Input.mousePosition);
-            if(currentHoverItem >= 0)
+            if (Input.GetMouseButtonDown(0))
             {
+                currentHoverItem = GetIndexOfFirstMapItem(Input.mousePosition);
+                if (currentHoverItem >= 0)
+                {
+                    previourMousePosition = Input.mousePosition;
+                    startMousePosition = Input.mousePosition;
+                }
+                isDrag = false;
+            }
+            else if (Input.GetMouseButton(0) && currentHoverItem >= 0 && DeltaWorldMousePosition != Vector2.zero)
+            {
+                items[currentHoverItem].rectTransform.position = items[currentHoverItem].rectTransform.position + (Vector3)DeltaWorldMousePosition;
                 previourMousePosition = Input.mousePosition;
-                startMousePosition = Input.mousePosition;
+                if (((Vector2)Input.mousePosition - startMousePosition).sqrMagnitude > maxRangeTilDrag && !isDrag)
+                {
+                    isDrag = true;
+                }
             }
-            isDrag = false;
-        }
-        else if(Input.GetMouseButton(0) && currentHoverItem >= 0 && DeltaWorldMousePosition != Vector2.zero)
-        {
-            items[currentHoverItem].rectTransform.position = items[currentHoverItem].rectTransform.position + (Vector3)DeltaWorldMousePosition;
-            previourMousePosition = Input.mousePosition;
-            if(((Vector2)Input.mousePosition - startMousePosition).sqrMagnitude > maxRangeTilDrag && !isDrag)
+            else if (Input.GetMouseButtonUp(0) && currentHoverItem >= 0)
             {
-                isDrag = true;
+                Vector2 positionOnParent = Vector2.right * items[currentHoverItem].rectTransform.anchorMin.x * mapItemsParent.rect.width +
+                    Vector2.up * items[currentHoverItem].rectTransform.anchorMin.y * mapItemsParent.rect.height;
+                positionOnParent += ((Vector2)Input.mousePosition - startMousePosition);
+
+                Vector2 deltaMovement = Vector2.right * (Input.mousePosition.x - startMousePosition.x) / mapItemsParent.rect.width +
+                    Vector2.up * (Input.mousePosition.y - startMousePosition.y) / mapItemsParent.rect.height;
+
+                Vector2 size = items[currentHoverItem].rectTransform.sizeDelta;
+                items[currentHoverItem].rectTransform.offsetMin = Vector2.zero;
+                items[currentHoverItem].rectTransform.offsetMax = Vector2.zero;
+                items[currentHoverItem].rectTransform.anchorMin = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
+                items[currentHoverItem].rectTransform.anchorMax = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
+                items[currentHoverItem].rectTransform.sizeDelta = size;
+
+                items[currentHoverItem].onEndMove.Invoke();
+                if (!isDrag)
+                {
+                    GameManager.Instance.inMenu = true;
+                    mapItemContextMenu.position = Camera.main.ScreenToWorldPoint(Input.mousePosition) + Vector3.forward * mapItemContextMenu.position.z;
+                    onItempressedEvent.Invoke();
+                }
             }
-        }
-        else if(Input.GetMouseButtonUp(0) && currentHoverItem >= 0)
-        {
-            Vector2 positionOnParent = Vector2.right * items[currentHoverItem].rectTransform.anchorMin.x * mapItemsParent.rect.width +
-                Vector2.up * items[currentHoverItem].rectTransform.anchorMin.y * mapItemsParent.rect.height;
-            positionOnParent += ((Vector2)Input.mousePosition - startMousePosition);
-
-            Vector2 deltaMovement = Vector2.right * (Input.mousePosition.x - startMousePosition.x) / mapItemsParent.rect.width +
-                Vector2.up * (Input.mousePosition.y - startMousePosition.y) / mapItemsParent.rect.height;
-
-            Vector2 size = items[currentHoverItem].rectTransform.sizeDelta;
-            items[currentHoverItem].rectTransform.offsetMin = Vector2.zero;
-            items[currentHoverItem].rectTransform.offsetMax = Vector2.zero;
-            items[currentHoverItem].rectTransform.anchorMin = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
-            items[currentHoverItem].rectTransform.anchorMax = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
-            items[currentHoverItem].rectTransform.sizeDelta = size;
-
-            items[currentHoverItem].onEndMove.Invoke();
-            if (!isDrag)
-            {
-                Debug.Log("Do Stuff");
-            }
-            currentHoverItem = -1;
         }
     }
 
@@ -183,6 +213,16 @@ public class MapPageBehaviour : PageBehaviour
             }
         }
         return -1;
+    }
+
+    public void RemoveCurrentPage()
+    {
+        RemovePage(items[currentHoverItem].page.id);
+    }
+
+    public void OpenCurrentPage()
+    {
+        GameManager.Instance.OpenPage(items[currentHoverItem].page.id);
     }
 }
 

@@ -18,6 +18,11 @@ public class GameManager : MonoBehaviour
     public bool favoriteFilter;
 
     public static bool isSelectingLink = false;
+    public static bool isSelectingMapitem = false;
+    public bool inMenu {
+        get;
+        set; }
+    public bool prevMenu;
 
     public TMP_Text campaignTitle;
 
@@ -44,6 +49,11 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get => instance; }
     public static Campaign CurrentCampaign { get => instance.currentCampaign; }
+
+    private void LateUpdate()
+    {
+        prevMenu = inMenu;
+    }
 
     private void Awake()
     {

@@ -66,6 +66,18 @@ public class PagePanelItem : MonoBehaviour
         {
             GameManager.Instance.SelectPage(page.id);
         }
+        else if(GameManager.isSelectingMapitem && !isLink)
+        {
+            if(GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).pageType == PageTypes.Map)
+            {
+                GameManager.Instance.mainPanel.AddItemToMap(page.id);
+                GameManager.isSelectingMapitem = false;
+            }
+            else
+            {
+                GameManager.isSelectingMapitem = false;
+            }
+        }
         else
         {
             onOpenPage.Invoke();
