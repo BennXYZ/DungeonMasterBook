@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class MapPageBehaviour : PageBehaviour
 {
@@ -11,10 +12,13 @@ public class MapPageBehaviour : PageBehaviour
     public GameObject mapItemPrefab;
     public RectTransform mapItemsParent;
 
+    public GameObject mapLinkPrefab;
+
     public float maxRangeTilDrag;
 
     public UnityEvent onItempressedEvent;
     public RectTransform mapItemContextMenu;
+    public Slider sizeSlider;
 
     int currentHoverItem = -1;
 
@@ -53,10 +57,23 @@ public class MapPageBehaviour : PageBehaviour
     public override void SetText(List<string> texts)
     {
         Clear();
-        for (int i = 0; i < texts.Count; i++)
+
+        SetScale(texts[0]);
+        for (int i = 1; i < texts.Count; i++)
         {
             SpawnItem(texts[i]);
         }
+    }
+
+    public void SetScale(string text)
+    {
+        float result;
+        if(float.TryParse(text,out result))
+        {
+            sizeSlider.value = result;
+            return;
+        }
+        sizeSlider.value = 0.5f;
     }
 
     public void AddPage(int id)
@@ -64,9 +81,14 @@ public class MapPageBehaviour : PageBehaviour
         SpawnItem(id);
     }
 
+    private void OnDisable()
+    {
+        Clear();
+    }
+
     public void RemovePage(int id)
     {
-        for (int i = 0; i < GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts.Count; i++)
+        for (int i = 1; i < GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts.Count; i++)
         {
             if(MapItemDataConverter.GetId(GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts[i]) == id)
             {
@@ -80,7 +102,7 @@ public class MapPageBehaviour : PageBehaviour
             {
                 if(items[i].page.pageType == PageTypes.Map)
                 {
-                    for (int j = 0; j < items[i].page.texts.Count; j++)
+                    for (int j = 1; j < items[i].page.texts.Count; j++)
                     {
                         if(MapItemDataConverter.GetId(items[i].page.texts[j]) == GameManager.Instance.mainPanel.currentPageId)
                         {
@@ -112,16 +134,25 @@ public class MapPageBehaviour : PageBehaviour
             items[newItemId].page.texts.Add(MapItemDataConverter.GetTextFromItem(GameManager.Instance.mainPanel.currentPageId, Vector2.one * 0.5f));
         }
         items[newItemId].onEndMove = new UnityEngine.Events.UnityEvent();
-        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[currentHoverItem].page.id, items[currentHoverItem].rectTransform.anchorMin), currentHoverItem); });
+        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[currentHoverItem].page.id, items[currentHoverItem].rectTransform.anchorMin), currentHoverItem + 1); });
 
-        Vector2 size = items[newItemId].rectTransform.sizeDelta;
         items[newItemId].rectTransform.anchorMin = Vector2.one * 0.5f;
         items[newItemId].rectTransform.anchorMax = Vector2.one * 0.5f;
         items[newItemId].rectTransform.offsetMin = Vector2.zero;
         items[newItemId].rectTransform.offsetMax = Vector2.zero;
-        items[newItemId].rectTransform.sizeDelta = size;
+        items[newItemId].rectTransform.sizeDelta = GetCurrentObjectSize();
+        items[newItemId].rectTransform.position = Vector3.right * items[newItemId].rectTransform.position.x + Vector3.up * items[newItemId].rectTransform.position.y + Vector3.forward * 50;
 
         GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts.Add(MapItemDataConverter.GetTextFromItem(id, Vector2.one * 0.5f));
+
+        for (int i = 0; i < items.Count - 1; i++)
+        {
+            if(items[newItemId].page.links.Contains(items[i].page.id) || items[i].page.links.Contains(items[newItemId].page.id))
+            {
+                int foundItem = i;
+                Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[newItemId].gameObject.transform, items[foundItem].gameObject.transform, sizeSlider);
+            }
+        }
 
         return items[newItemId];
     }
@@ -132,15 +163,39 @@ public class MapPageBehaviour : PageBehaviour
         int newItemId = items.Count - 1;
         items[newItemId].SetPage(GameManager.Instance.currentCampaign.GetPageById(MapItemDataConverter.GetId(text)));
         items[newItemId].onEndMove = new UnityEngine.Events.UnityEvent();
-        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[currentHoverItem].page.id, items[currentHoverItem].rectTransform.anchorMin), currentHoverItem); });
+        items[newItemId].onEndMove.AddListener(delegate { TextChanged(MapItemDataConverter.GetTextFromItem(items[currentHoverItem].page.id, items[currentHoverItem].rectTransform.anchorMin), currentHoverItem + 1); });
 
-        Vector2 size = items[newItemId].rectTransform.sizeDelta;
         items[newItemId].rectTransform.anchorMin = MapItemDataConverter.GetPosition(text);
         items[newItemId].rectTransform.anchorMax = MapItemDataConverter.GetPosition(text);
         items[newItemId].rectTransform.offsetMin = Vector2.zero;
         items[newItemId].rectTransform.offsetMax = Vector2.zero;
-        items[newItemId].rectTransform.sizeDelta = size;
+        items[newItemId].rectTransform.sizeDelta = GetCurrentObjectSize();
+        items[newItemId].rectTransform.position = Vector3.right * items[newItemId].rectTransform.position.x + Vector3.up * items[newItemId].rectTransform.position.y + Vector3.forward * 50;
+
+        for (int i = 0; i < items.Count - 1; i++)
+        {
+            if (items[newItemId].page.links.Contains(items[i].page.id))
+            {
+                int foundItem = i;
+                Instantiate(mapLinkPrefab).GetComponent<MapItemLink>().SetTransforms(items[newItemId].gameObject.transform, items[foundItem].gameObject.transform, sizeSlider);
+            }
+        }
+
         return items[newItemId];
+    }
+
+    public void SetObjectSize(float scale)
+    {
+        GameManager.Instance.currentCampaign.GetPageById(GameManager.Instance.mainPanel.currentPageId).texts[0] = scale.ToString();
+        for (int i = 0; i < items.Count; i++)
+        {
+            items[i].rectTransform.sizeDelta = Vector2.one * (10 + 150 * scale);
+        }
+    }
+
+    public Vector2 GetCurrentObjectSize()
+    {
+        return Vector2.one * (10 + 150 * sizeSlider.value);
     }
 
     public void Clear()
@@ -188,7 +243,9 @@ public class MapPageBehaviour : PageBehaviour
                 items[currentHoverItem].rectTransform.offsetMin = Vector2.zero;
                 items[currentHoverItem].rectTransform.offsetMax = Vector2.zero;
                 items[currentHoverItem].rectTransform.anchorMin = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
-                items[currentHoverItem].rectTransform.anchorMax = Vector2.right * positionOnParent.x / mapItemsParent.rect.width + Vector2.up * positionOnParent.y / mapItemsParent.rect.height;
+                items[currentHoverItem].rectTransform.anchorMin = Vector2.right * Mathf.Max(Mathf.Min(items[currentHoverItem].rectTransform.anchorMin.x, 1), 0)
+                    + Vector2.up * Mathf.Max(Mathf.Min(items[currentHoverItem].rectTransform.anchorMin.y, 1), 0);
+                items[currentHoverItem].rectTransform.anchorMax = items[currentHoverItem].rectTransform.anchorMin;
                 items[currentHoverItem].rectTransform.sizeDelta = size;
 
                 items[currentHoverItem].onEndMove.Invoke();

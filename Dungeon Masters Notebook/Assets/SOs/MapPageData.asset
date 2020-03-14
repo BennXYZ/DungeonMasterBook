@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: MapPageData
   m_EditorClassIdentifier: 
   type: 7
-  numberOfTexts: 0
+  numberOfTexts: 1
   numberOfImages: 1
