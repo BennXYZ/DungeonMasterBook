@@ -20,6 +20,7 @@ public class PagetagSelection : MonoBehaviour
         {
             items = new List<TagItem>();
             Clear();
+            initialized = true;
         }
     }
 
@@ -29,6 +30,7 @@ public class PagetagSelection : MonoBehaviour
         {
             items = new List<TagItem>();
             Clear();
+            initialized = true;
         }
     }
 
