@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -170,12 +171,12 @@ public class GameManager : MonoBehaviour
         tagsPanel.UpdatePageTags();
     }
 
-    public void Load(string title)
+    public void Load(string path)
     {
         loadingWindow.SetActive(true);
         currentlyLoadingTextures = 0;
-        campaignTitle.text = title;
-        currentCampaign = new Campaign(SaveSystem.LoadCampaign(title));
+        campaignTitle.text = Path.GetFileNameWithoutExtension(path);
+        currentCampaign = new Campaign(SaveSystem.LoadCampaign(path));
         CheckLoadedTextures();
     }
 
@@ -226,10 +227,11 @@ public class GameManager : MonoBehaviour
         CheckLoadedTextures();
     }
 
-    public void _CreateNewCampaign(string name)
+    public void _CreateNewCampaign(string name, string path)
     {
         currentCampaign = new Campaign();
         currentCampaign.name = name;
+        currentCampaign.path = path;
         pagesPanel.LoadPages();
         tagsPanel.LoadTags();
         AddPage("Blank");
@@ -238,9 +240,9 @@ public class GameManager : MonoBehaviour
         tagsPanel.UpdatePageTags();
     }
 
-    public static void CreateNewCampaign(string name)
+    public static void CreateNewCampaign(string name, string path)
     {
-        instance._CreateNewCampaign(name);
+        instance._CreateNewCampaign(name, path);
     }
 
     public void OpenPage(int id)

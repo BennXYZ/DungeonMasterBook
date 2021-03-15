@@ -6,6 +6,7 @@ using UnityEngine;
 public class Campaign
 {
     public string name;
+    public string path;
     public List<Page> pages;
     public List<Tag> tags;
 

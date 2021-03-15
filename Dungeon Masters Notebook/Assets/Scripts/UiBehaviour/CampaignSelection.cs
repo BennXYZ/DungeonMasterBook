@@ -54,13 +54,17 @@ public class CampaignSelection : MonoBehaviour
 
     public void CreateNewCampaign()
     {
-        if(inputField.text != "")
-        {
-            GameManager.CreateNewCampaign(inputField.text);
-            PlayerPrefs.SetString(campaignNamePrefix + PlayerPrefs.GetInt(campaignsCountGetter, 0), inputField.text);
-            PlayerPrefs.SetInt(campaignsCountGetter, PlayerPrefs.GetInt(campaignsCountGetter, 0) + 1);
-            gameObject.SetActive(false);
-        }
+        string path = SFB.StandaloneFileBrowser.SaveFilePanel("Create Campaign", "", "the thieves guild", "book");
+        string name = GetNameFromPath(path);
+        GameManager.CreateNewCampaign(name, path);
+        PlayerPrefs.SetString(campaignNamePrefix + PlayerPrefs.GetInt(campaignsCountGetter, 0), inputField.text);
+        PlayerPrefs.SetInt(campaignsCountGetter, PlayerPrefs.GetInt(campaignsCountGetter, 0) + 1);
+        gameObject.SetActive(false);
+    }
+
+    private string GetNameFromPath(string path)
+    {
+        return Path.GetFileNameWithoutExtension(path);
     }
 
     void ActuallyRemoveCampaign(CampaignLoadingItem item)

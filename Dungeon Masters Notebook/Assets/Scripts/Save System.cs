@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Newtonsoft.Json;
 using System.Runtime.Serialization.Formatters.Binary;
 
 public static class SaveSystem
@@ -9,7 +10,7 @@ public static class SaveSystem
     public static void SaveCampaign(Campaign campaign)
     {
         BinaryFormatter formatter = new BinaryFormatter();
-        string path = Application.persistentDataPath + "/" + campaign.name + ".book";
+        string path = campaign.path;
         FileStream stream = new FileStream(path, FileMode.Create);
 
         CampaignData data = new CampaignData(campaign);
@@ -18,9 +19,8 @@ public static class SaveSystem
         stream.Close();
     }
 
-    public static CampaignData LoadCampaign(string title)
+    public static CampaignData LoadCampaign(string path)
     {
-        string path = Application.persistentDataPath + "/" + title + ".book";
         if(File.Exists(path))
         {
             BinaryFormatter formatter = new BinaryFormatter();
