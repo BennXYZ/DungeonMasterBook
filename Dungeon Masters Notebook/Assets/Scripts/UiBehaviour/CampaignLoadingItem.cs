@@ -10,7 +10,10 @@ public class CampaignLoadingItem : MonoBehaviour
 
     public UnityEvent onRemove;
 
-    public TMP_Text title;
+    public TMP_Text titleField;
+
+    public string title;
+    public string path;
 
     public void OnRemove()
     {
@@ -19,7 +22,7 @@ public class CampaignLoadingItem : MonoBehaviour
 
     public void Init(string title)
     {
-        this.title.text = title;
+        this.titleField.text = title;
     }
 
     public void OnPresses()

@@ -7279,7 +7279,6 @@ MonoBehaviour:
   campaignSelection: {fileID: 1441237443}
   loadingWindow: {fileID: 1338367674}
   defaultSprite: {fileID: 21300000, guid: 994ecf61f87b191408baa2d6e813bbdc, type: 3}
-  imageLoader: {fileID: 606155237}
 --- !u!4 &606155236
 Transform:
   m_ObjectHideFlags: 0
@@ -26869,27 +26868,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1597331089}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: NewCampaign
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 431269430}
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 1441237443}
+        m_MethodName: CreateNewCampaign
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2045535469
 MonoBehaviour:

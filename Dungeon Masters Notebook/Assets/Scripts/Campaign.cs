@@ -82,6 +82,7 @@ public class Campaign
     public Campaign(CampaignData data)
     {
         name = data.name;
+        path = data.path;
         pages = new List<Page>();
         tags = new List<Tag>();
         int totalCount = data.tags.Length + data.pages.Length;
@@ -102,12 +103,18 @@ public class Campaign
 public class CampaignData
 {
     public string name;
+    public string path;
     public string[] tags;
     public PageData[] pages;
+
+    public CampaignData()
+    {
+    }
 
     public CampaignData(Campaign campaign)
     {
         name = campaign.name;
+        path = campaign.path;
         tags = new string[campaign.tags.Count];
         for (int i = 0; i < campaign.tags.Count; i++)
         {

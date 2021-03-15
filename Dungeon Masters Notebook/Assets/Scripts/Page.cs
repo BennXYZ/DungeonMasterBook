@@ -115,6 +115,11 @@ public class PageData
     public int[] links;
     public bool favorite;
 
+    public PageData()
+    {
+
+    }
+
     public PageData(Page data)
     {
         tags = data.tags.ToArray();

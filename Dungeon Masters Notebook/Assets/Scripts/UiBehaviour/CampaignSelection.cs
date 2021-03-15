@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using TMPro;
 using UnityEngine;
 
 public class CampaignSelection : MonoBehaviour
 {
-    const string campaignsCountGetter = "CAMPAIGNS_COUNT";
-    const string campaignNamePrefix = "CAMPAIGN_NAME_";
+    const string SettingsPostFix = "/Settings.DMNBSettings";
 
     public Transform loadingItemsParent;
 
@@ -19,9 +20,32 @@ public class CampaignSelection : MonoBehaviour
 
     List<CampaignLoadingItem> items;
 
+    NotebookSettings currentSettings;
+
     private void Awake()
     {
         items = new List<CampaignLoadingItem>();
+        if (File.Exists(Application.persistentDataPath + SettingsPostFix))
+        {
+            string json = File.ReadAllText(Application.persistentDataPath + SettingsPostFix);
+            currentSettings = JsonConvert.DeserializeObject<NotebookSettings>(json);
+            if (currentSettings.names == null)
+                currentSettings.names = new List<string>();
+            if (currentSettings.paths == null)
+                currentSettings.paths = new List<string>();
+        }
+        else
+        {
+            currentSettings = new NotebookSettings();
+            string json = JsonConvert.SerializeObject(currentSettings);
+            File.WriteAllText(Application.persistentDataPath + SettingsPostFix, json);
+        }
+    }
+
+    private void SaveCurrentSettings()
+    {
+        string json = JsonConvert.SerializeObject(currentSettings);
+        File.WriteAllText(Application.persistentDataPath + SettingsPostFix, json);
     }
 
     private void OnEnable()
@@ -41,11 +65,12 @@ public class CampaignSelection : MonoBehaviour
 
     public void CreateLoadingItems()
     {
-        int numberOfCampaigns = PlayerPrefs.GetInt(campaignsCountGetter, 0);
-        for (int i = 0; i < numberOfCampaigns; i++)
+        for (int i = 0; i < currentSettings.names.Count; i++)
         {
             CampaignLoadingItem newItem = Instantiate(loadingItemPrefab, loadingItemsParent).GetComponent<CampaignLoadingItem>();
-            newItem.Init(PlayerPrefs.GetString(campaignNamePrefix + i, "Not Found"));
+            newItem.title = currentSettings.names[i];
+            newItem.titleField.text = newItem.title;
+            newItem.path = currentSettings.paths[i];
             newItem.onPress.AddListener(delegate { OpenCampaign(newItem); });
             newItem.onRemove.AddListener(delegate { RemoveCampaign(newItem); });
             items.Add(newItem);
@@ -55,10 +80,15 @@ public class CampaignSelection : MonoBehaviour
     public void CreateNewCampaign()
     {
         string path = SFB.StandaloneFileBrowser.SaveFilePanel("Create Campaign", "", "the thieves guild", "book");
+        if (string.IsNullOrEmpty(path))
+            return;
         string name = GetNameFromPath(path);
         GameManager.CreateNewCampaign(name, path);
-        PlayerPrefs.SetString(campaignNamePrefix + PlayerPrefs.GetInt(campaignsCountGetter, 0), inputField.text);
-        PlayerPrefs.SetInt(campaignsCountGetter, PlayerPrefs.GetInt(campaignsCountGetter, 0) + 1);
+
+        currentSettings.names.Add(name);
+        currentSettings.paths.Add(path);
+        SaveCurrentSettings();
+
         gameObject.SetActive(false);
     }
 
@@ -70,25 +100,29 @@ public class CampaignSelection : MonoBehaviour
     void ActuallyRemoveCampaign(CampaignLoadingItem item)
     {
         int index = items.IndexOf(item);
-        int numberOfCampaigns = PlayerPrefs.GetInt(campaignsCountGetter, 0);
-        for (int i = index; i < numberOfCampaigns - 1; i++)
-        {
-            PlayerPrefs.SetString(campaignNamePrefix + i, PlayerPrefs.GetString(campaignNamePrefix + (i + 1)));
-        }
-        PlayerPrefs.SetInt(campaignsCountGetter, PlayerPrefs.GetInt(campaignsCountGetter, 0) - 1);
+        currentSettings.names.RemoveAt(index);
+        currentSettings.paths.RemoveAt(index);
+        SaveCurrentSettings();
         Destroy(item.gameObject);
         items.Remove(item);
     }
 
     public void RemoveCampaign(CampaignLoadingItem item)
     {
-        WarningNotification.OpenNotificationWindow("Do you really want to delete the Campaign " + item.title.text + "?", delegate { ActuallyRemoveCampaign(item); });
+        WarningNotification.OpenNotificationWindow("Do you really want to delete the Campaign " + item.title + "?", delegate { ActuallyRemoveCampaign(item); });
     }
 
     public void OpenCampaign(CampaignLoadingItem item)
     {
-        GameManager.OpenCampaign(item.title.text);
-        gameObject.SetActive(false);
+        if(File.Exists(item.path))
+        {
+            GameManager.OpenCampaign(item.path);
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            RemoveCampaign(item);
+        }
     }
 
     public void ImportCampaign()
@@ -131,4 +165,10 @@ public class CampaignSelection : MonoBehaviour
             stream.Close();
         }
     }
+}
+
+public class NotebookSettings
+{
+    public List<string> paths = new List<string>();
+    public List<string> names = new List<string>();
 }

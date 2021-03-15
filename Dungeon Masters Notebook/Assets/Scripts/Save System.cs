@@ -9,27 +9,16 @@ public static class SaveSystem
 {
     public static void SaveCampaign(Campaign campaign)
     {
-        BinaryFormatter formatter = new BinaryFormatter();
-        string path = campaign.path;
-        FileStream stream = new FileStream(path, FileMode.Create);
-
-        CampaignData data = new CampaignData(campaign);
-
-        formatter.Serialize(stream, data);
-        stream.Close();
+        string json = JsonConvert.SerializeObject(new CampaignData(campaign));
+        File.WriteAllText(campaign.path, json);
     }
 
     public static CampaignData LoadCampaign(string path)
     {
         if(File.Exists(path))
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream stream = new FileStream(path, FileMode.Open);
-
-            CampaignData data = formatter.Deserialize(stream) as CampaignData;
-
-            stream.Close();
-
+            string json = File.ReadAllText(path);
+            CampaignData data = JsonConvert.DeserializeObject<CampaignData>(json);
             return data;
         }
         else
