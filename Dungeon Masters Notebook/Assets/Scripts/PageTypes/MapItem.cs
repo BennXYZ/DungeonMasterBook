@@ -27,6 +27,8 @@ public class MapItem : MonoBehaviour
     {
         text.text = page.name;
         maskImage.sprite = GameManager.Instance.settingsList.GetSettings(page.pageType).mapItemMask;
+        borderImage.sprite = GameManager.Instance.settingsList.GetSettings(page.pageType).mapItemBorder;
+        borderImage.color = GameManager.Instance.settingsList.GetSettings(page.pageType).mapItemBorder == null ? new Color(0, 0, 0, 0) : Color.white;
         image.sprite = page.textures[0];
     }
 

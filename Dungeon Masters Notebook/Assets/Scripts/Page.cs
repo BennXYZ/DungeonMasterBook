@@ -14,6 +14,7 @@ public class Page
     public List<string> tags;
     public List<string> texts;
     public List<int> links;
+    public List<Note> notes;
     public PageTypes pageType;
     public bool favorite;
 
@@ -50,7 +51,7 @@ public class Page
         for (int i = 0; i < GameManager.Instance.settingsList.GetSettings(pageType).numberOfImages; i++)
         {
             imagePaths.Add(string.Empty);
-            textures.Add(null);
+            textures.Add(GameManager.Instance.defaultSprite);
         }
     }
 
@@ -77,7 +78,7 @@ public class Page
                     }
                     else
                     {
-                        textures.Add(null);
+                        textures.Add(GameManager.Instance.defaultSprite);
                         int currentImage = i;
                         GameManager.Instance.StartLoadingImageURL(this, currentImage);
                     }
@@ -88,12 +89,18 @@ public class Page
                 }
             }else
             {
-                textures.Add(null);
+                textures.Add(GameManager.Instance.defaultSprite);
             }
         }
         texts = data.texts.ToList();
         links = data.links.ToList();
     }
+}
+
+public class Note
+{
+    public string title;
+    public string text;
 }
 
 [System.Serializable]

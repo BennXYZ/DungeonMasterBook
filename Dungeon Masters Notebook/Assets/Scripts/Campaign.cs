@@ -83,6 +83,7 @@ public class Campaign
         name = data.name;
         pages = new List<Page>();
         tags = new List<Tag>();
+        int totalCount = data.tags.Length + data.pages.Length;
 
         for (int i = 0; i < data.tags.Length; i++)
         {

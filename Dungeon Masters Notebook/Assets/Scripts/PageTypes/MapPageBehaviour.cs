@@ -16,6 +16,7 @@ public class MapPageBehaviour : PageBehaviour
 
     public GameObject mapItemPrefab;
     public RectTransform mapItemsParent;
+    public RectTransform mapViewParent;
 
     public GameObject mapLinkPrefab;
     public GameObject removeLinkPrefab;
@@ -25,6 +26,8 @@ public class MapPageBehaviour : PageBehaviour
     public UnityEvent onItempressedEvent;
     public RectTransform mapItemContextMenu;
     public Slider sizeSlider;
+
+    public GameObject defaultImage;
 
     int currentLinkId = -1;
     bool isCreatingLink = true;
@@ -267,6 +270,11 @@ public class MapPageBehaviour : PageBehaviour
         }
     }
 
+    public void SetMapSize(float scale)
+    {
+        mapViewParent.localScale = Vector3.one * (1 + scale * 2);
+    }
+
     public Vector2 GetCurrentObjectSize()
     {
         return Vector2.one * (10 + 150 * sizeSlider.value);
@@ -340,6 +348,12 @@ public class MapPageBehaviour : PageBehaviour
                         onItempressedEvent.Invoke();
                     }
                 }
+            }
+            else if(Input.GetMouseButtonUp(0) && currentlyConnectingLink != null)
+            {
+                Destroy(currentlyConnectingLink.gameObject);
+                currentlyConnectingLink = null;
+                currentLinkId = -1;
             }
         }
     }
@@ -462,6 +476,10 @@ public class MapPageBehaviour : PageBehaviour
 
     public void OpenCurrentPage()
     {
+        foreach(MapItemLink item in GameObject.FindObjectsOfType<MapItemLink>())
+        {
+            Destroy(item.gameObject);
+        }
         GameManager.Instance.OpenPage(items[currentHoverItem].page.id);
     }
 }

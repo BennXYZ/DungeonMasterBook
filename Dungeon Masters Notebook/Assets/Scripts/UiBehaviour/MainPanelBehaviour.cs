@@ -12,7 +12,6 @@ public class MainPanelBehaviour : MonoBehaviour
     public ImageLoader imageLoader;
     public PagetagSelection[] pagetagSelections;
     public Toggle[] favoriteToggles;
-    public GameObject header;
 
 
     [Space(20)]
@@ -128,9 +127,7 @@ public class MainPanelBehaviour : MonoBehaviour
 
     public void OpenPage(Page page)
     {
-        header.gameObject.SetActive(true);
         currentPageId = page.id;
-        GameManager.Instance.linksPanel.gameObject.SetActive(true);
         UpdateItems();
         ActivateAllPages(false, page.pageType);
         GetPageByType(page.pageType).SetText(page.texts);
@@ -144,9 +141,7 @@ public class MainPanelBehaviour : MonoBehaviour
     {
         if(GameManager.CurrentCampaign.GetPageById(id) != null)
         {
-            header.gameObject.SetActive(true);
             currentPageId = id;
-            GameManager.Instance.linksPanel.gameObject.SetActive(true);
             UpdateItems();
             ActivateAllPages(false, GameManager.CurrentCampaign.GetPageById(id).pageType);
             GetPageByType(GameManager.CurrentCampaign.GetPageById(id).pageType).SetText(GameManager.CurrentCampaign.GetPageById(id).texts);
@@ -159,11 +154,6 @@ public class MainPanelBehaviour : MonoBehaviour
     
     public void ActivateAllPages(bool val, PageTypes exception = PageTypes.Default)
     {
-        if(exception == PageTypes.Default || exception == PageTypes.Map)
-        {
-            header.gameObject.SetActive(val);
-            GameManager.Instance.linksPanel.gameObject.SetActive(val);
-        }
         for (int i = 0; i < pageBehaviours.Count; i++)
         {
             if (pageBehaviours[i].page != null)

@@ -38,6 +38,12 @@ public class GameManager : MonoBehaviour
 
     public CampaignSelection campaignSelection;
 
+    public GameObject loadingWindow;
+
+    public Sprite defaultSprite;
+
+    int currentlyLoadingTextures = 0;
+
     public Dictionary<PageTypes, bool> pageFilters = new Dictionary<PageTypes, bool>
     {
         {PageTypes.Blank, false },
@@ -55,6 +61,17 @@ public class GameManager : MonoBehaviour
     private void LateUpdate()
     {
         prevMenu = inMenu;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftControl) || Input.GetKeyDown(KeyCode.S))
+        {
+            if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.S))
+            {
+                Save();
+            }
+        }
     }
 
     private void Awake()
@@ -121,17 +138,12 @@ public class GameManager : MonoBehaviour
     {
         try
         {
-            PageTypes type = (PageTypes)Enum.Parse(typeof(PageTypes), name);
-            if(type != PageTypes.Default)
-            {
-                currentCampaign.pages.Add(new Page(currentCampaign.FirstAvailableId(), CurrentCampaign.tags.Where(t => t.active).ToList(), type));
-                pagesPanel.CreatePageItem(currentCampaign.pages[currentCampaign.pages.Count - 1]);
-                OpenPage(currentCampaign.pages[currentCampaign.pages.Count - 1].id);
-            }
-            else
-            {
-                Debug.LogError("There was an Error when choosing a Page-Type. Name: " + name);
-            }
+            PageTypes type = PageTypes.Blank;
+            if (name.ToLower() == "map")
+                type = PageTypes.Map;
+            currentCampaign.pages.Add(new Page(currentCampaign.FirstAvailableId(), CurrentCampaign.tags.Where(t => t.active).ToList(), type));
+            pagesPanel.CreatePageItem(currentCampaign.pages[currentCampaign.pages.Count - 1]);
+            OpenPage(currentCampaign.pages[currentCampaign.pages.Count - 1].id);
         }
         catch
         {
@@ -160,17 +172,29 @@ public class GameManager : MonoBehaviour
 
     public void Load(string title)
     {
-        currentCampaign = new Campaign(SaveSystem.LoadCampaign(title));
+        loadingWindow.SetActive(true);
+        currentlyLoadingTextures = 0;
         campaignTitle.text = title;
-        pagesPanel.LoadPages();
-        tagsPanel.LoadTags();
-        mainPanel.OpenPage(currentCampaign.pages[0]);
-        tagsPanel.UpdatePageTags();
+        currentCampaign = new Campaign(SaveSystem.LoadCampaign(title));
+        CheckLoadedTextures();
     }
 
     public void StartLoadingImageURL(Page page, int textureId)
     {
+        currentlyLoadingTextures++;
         StartCoroutine(LoadTexture(page, textureId));
+    }
+
+    private void CheckLoadedTextures()
+    {
+        if(currentlyLoadingTextures <= 0)
+        {
+            pagesPanel.LoadPages();
+            tagsPanel.LoadTags();
+            mainPanel.OpenPage(currentCampaign.pages[0]);
+            tagsPanel.UpdatePageTags();
+            loadingWindow.SetActive(false);
+        }
     }
 
     public IEnumerator LoadTexture(Page page, int textureId)
@@ -198,6 +222,8 @@ public class GameManager : MonoBehaviour
         }
         page.onPageChanged.Invoke();
         mainPanel.UpdateItems();
+        currentlyLoadingTextures--;
+        CheckLoadedTextures();
     }
 
     public void _CreateNewCampaign(string name)
